@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>RTBLOGG</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RTBLOGG">
+<meta property="og:url" content="http://localhost:4000/index.html">
+<meta property="og:site_name" content="RTBLOGG">
+<meta property="og:description">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RTBLOGG">
+<meta name="twitter:description">
+  
+    <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
+  
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/styles.css" type="text/css">
+  
+
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="main-menu-navbar">
+      <ul class="nav navbar-nav">
+        
+          <li><a class="active"
+                 href="/index.html">Home</a></li>
+        
+          <li><a class=""
+                 href="/archives/">Archives</a></li>
+        
+      </ul>
+
+      <!--
+      <ul class="nav navbar-nav navbar-right">
+        
+          <li><a href="/atom.xml" title="RSS Feed"><i class="fa fa-rss"></i></a></li>
+        
+      </ul>
+      -->
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+  <div class="container">
+    <div class="blog-header">
+  <h1 class="blog-title">RTBLOGG</h1>
+  
+    <p class="lead blog-description">All the things</p>
+  
+</div>
+
+    <div class="row">
+        <div class="col-sm-8 blog-main">
+          
+  
+    <article id="post-scoped-bindings-in-specflow" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/scoped-bindings-in-specflow/">Scoped Bindings in SpecFlow</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2015/08/scoped-bindings-in-specflow/" class="article-date"><time datetime="2015-08-03T02:42:43.000Z" itemprop="datePublished">2015-08-03</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>One of the things that I found slightly problematic about <a href="http://www.specflow.org/" target="_blank" rel="external">SpecFlow</a> is the global scoping of step definitions within bound classes, specifically when there are multiple feature files referring to shared step definitions.</p>
+<p><strong>So why do I feel this way?</strong></p>
+<p>Well, firstly there’s the reduced discoverability of step definitions. Sure you can use the build-in SpecFlow navigation feature to get to the definition, but this seems a little inefficient to me. I guess you could also use <a href="https://www.jetbrains.com/resharper/" target="_blank" rel="external">ReSharper</a>, but not everyone has this luxury. My other main gripe is that fact that you can’t use (or at least have to be careful using) private fields to maintain state for individual step definitions. The alternative is to use the ScenarioContext, which is a little over complicated for mine:</p>
+<pre lang="csharp">
+[Given(@"a property price of (.*)")]
+public void GivenAPropertyPriceOf(Decimal propertyPrice)
+{
+    ScenarioContext.Current.Set(propertyPrice, "propertyPrice");
+}
+
+[When(@"we press the button")]
+public void WhenWePressTheButton()
+{
+    var propertyPrice = ScenarioContext.Current.Get<decimal>("propertyPrice")
+    // ...
+}
+</decimal></pre>
+
+<p><strong>The solution – scoped bindings!</strong></p>
+<p>Scoped bindings allow the developer to have a one-to-one mapping between feature files and the step definitions defined by that feature. Sure we lose some reusability of individual step definitions, but in my opinion the pros outweigh the cons. The approach I’ve taken is to have my generated class files scoped to an associated feature as shown below:</p>
+<pre lang="csharp">
+    [Binding]
+    [Scope(Feature = "Name of Feature")]
+    public class Test
+    {
+        private decimal _propertyPrice;
+        private decimal _propertyValue;
+
+        [Given(@"a property price of (.*)")]
+        public void GivenAPropertyPriceOf(Decimal propertyPrice)
+        {
+            _propertyPrice = propertyPrice;
+        }
+
+        [Given(@"a property value of (.*)")]
+        public void GivenAPropertyValueOf(Decimal propertyValue)
+        {
+            _propertyValue = propertyValue;
+        }
+
+        [When(@"we press the button")]
+        public void WheneWePressTheButton()
+        {
+            // ...
+        }
+
+        [Then(@"the result is (.*)")]
+        public void ThenTheResultIs(Decimal result)
+        {
+            // ...
+        }
+    }
+</pre>
+
+<p>Now I’ve got quick and easy discoverability as well as the fact that I can use private fields without concern.</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://localhost:4000/2015/08/scoped-bindings-in-specflow/" data-id="cil50al2d000fk8vt2zc17g5y" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://localhost:4000/2015/08/scoped-bindings-in-specflow/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NET/">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpecFlow/">SpecFlow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Testing/">Testing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  
+  
+</article>
+
+
+
+  
+    <article id="post-specflow-who-writes-the-specifications" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/08/specflow-who-writes-the-specifications/">SpecFlow - who writes the specifications?</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2015/08/specflow-who-writes-the-specifications/" class="article-date"><time datetime="2015-08-03T01:27:41.000Z" itemprop="datePublished">2015-08-03</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>My DEV team and I used <a href="http://www.specflow.org/" target="_blank" rel="external">SpecFlow</a> for our last project. It’s a great tool for acceptance test driven development (ATDD). Some of the main benefits were it a) improved the understanding of the requirements, it b) absolutely ensured our solution addressed all the requirements, and c) it improved the accountability of defects i.e. was it a coding defect or a requirements defect.</p>
+<p><strong>So who writes the specifications (a.k.a. features)?</strong></p>
+<p>Ideally (in my opinion), a technical BA if you’re lucky enough to have one of these, otherwise this should be a joint effort between the BAs and DEVs. The reason for this is because some level of technical nous is required to write good executable specifications using the business-readable <a href="https://cucumber.io/" target="_blank" rel="external">cucumber</a> language, however, if this task is left exclusively to the developers the acceptance-criteria will likely have some leakage of implementation concerns (i.e. how not what).</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://localhost:4000/2015/08/specflow-who-writes-the-specifications/" data-id="cil50al270005k8vtc4geyryp" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://localhost:4000/2015/08/specflow-who-writes-the-specifications/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NET/">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cucumber/">Cucumber</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpecFlow/">SpecFlow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Testing/">Testing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  
+  
+</article>
+
+
+
+  
+    <article id="post-aws-s3-as-ftp-and-policy-granularity-issues" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/">AWS S3 as FTP and policy granularity issues</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" class="article-date"><time datetime="2015-07-09T05:32:46.000Z" itemprop="datePublished">2015-07-09</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate <a href="http://www.kentico.com/" target="_blank" rel="external">Kentico</a> websites. Makes total sense to outsource this work as they’ve got the expertise and “CMS” isn’t a core capability of my workplace. Anyway they need the content and databases for both sites, which sums to about 10 gig in total. They don’t have an FTP server and the suggestion was made to physically deliver this data securely via traditional means…</p>
+<p>I didn’t think much of this suggestion, so I took matters into my own hands and created an <a href="http://aws.amazon.com/s3/" target="_blank" rel="external">AWS S3</a> bucket with the intent that the consultancy could access this bucket (and only this bucket) using something like <a href="http://www.cloudberrylab.com/free-amazon-s3-explorer-cloudfront-IAM.aspx" target="_blank" rel="external">CloudBerry Explorer</a>, or <a href="http://www.s3fox.net/" target="_blank" rel="external">S3Fox</a>. I created a user for the consultancy in <a href="http://aws.amazon.com/iam/" target="_blank" rel="external">IAM</a>, saved the access/secret key pair, and went to work on defining and attaching a policy to this user. I tried a couple different policies, but I couldn’t see any S3 buckets! When I used my own access key, everything was good and I could see everything I was supposed to. Eventually, I just used the standard <a href="http://docs.aws.amazon.com/directoryservice/latest/adminguide/role_s3_full_access.html" target="_blank" rel="external">AmazonS3FullAccess</a> policy and what do you know, I could see everything! This, however, wasn’t a viable solution, as the consultancy could see and get to the contents of ALL our other S3 buckets. I did some deeper investigation and came upon an <a href="http://stackoverflow.com/questions/6615168/s3-policy-limiting-access-to-only-one-bucket-listing-included" target="_blank" rel="external">article on StackOverflow</a>, which perfectly outlined my problem.</p>
+<p>Turns out there no way to let the user list only selected buckets. You can either list all buckets or none. This seems like a bit of an oversight by Amazon in my opinion.</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cil50al1l0000k8vtl5gvebz4" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AWS/">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  
+  
+</article>
+
+
+
+  
+    <article id="post-contextual-logging-with-log4net" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/contextual-logging-with-log4net/">contextual logging with log4net</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2015/07/contextual-logging-with-log4net/" class="article-date"><time datetime="2015-07-08T03:36:34.000Z" itemprop="datePublished">2015-07-08</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>If you’re using a logging framework like <a href="https://logging.apache.org/log4net/" target="_blank" rel="external">log4net</a> or <a href="http://nlog-project.org/" target="_blank" rel="external">nlog</a> and you’ve got multiple log messages being written concurrently from different objects in the call stack, you should consider contextual logging.</p>
+<p>One of the main benefits is that it allows you to associate and filter log messages based on a particular context. This definition is a little abstract - its probably one of those times where its easier to explain the consequences of not doing this, as opposed to the benefits of doing so… If you don’t have contextual logging and you’ve got concurrent messages being logged, often from multiple applications and/or servers, to some centralised log store (e.g. a database table, or something like <a href="https://www.graylog.org/" target="_blank" rel="external">graylog</a>); depending on the number of log messages coming in, it could be extremely difficult to correlate log messages to a particular call context.</p>
+<p>Consider the following scenarios:</p>
+<ul>
+<li>A WCF service operation that gets invoked roughly 10 times per second and writes log messages from multiple different objects in the call stack.</li>
+<li>A multi-threaded message queue consumer application running on multiple server instances where the consumer writes log messages at various levels in the call graph.</li>
+</ul>
+<p>Now consider all the above scenarios getting logged to the same centralised logging repository!</p>
+<p>If you were notified of an error, you might be able to easily find the error message, but without contextual logging the prior logs leading up to the error (e.g. a log of the request object or the queued message) would be very hard to reconcile. What you need is some kind of identifier (e.g. such as a GUID) associated to the call context, which you can subsequently filter on. This would then allow you to get a sequence of log messages up to and including the error from the same logical thread context.  </p>
+<p>log4net allows you to add contextual properties to a thread properties map using the static <code>LogicalThreadContext.Properties</code> instance. The only problem with this is that it’s static and not very conducive for testing - more on this later. For now, we can add context as follows:</p>
+<p>This context can now be included in log messages by including <code>%property{context}</code> in the layout as shown below:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">appender</span> <span class="attribute">name</span>=<span class="value">"TraceAppender"</span> <span class="attribute">type</span>=<span class="value">"log4net.Appender.TraceAppender"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">layout</span> <span class="attribute">type</span>=<span class="value">"log4net.Layout.PatternLayout"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">conversionPattern</span> <span class="attribute">value</span>=<span class="value">"%d %-5p %property&#123;context&#125; %c - %m%n"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">layout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">appender</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>If we were logging to a database, we could include the context as one of the columns.</p>
+<p><img src="/images/log4net-context-logged-too-database-example.png" alt="log4net-context-logged-too-database-example"></p>
+<p>This is especially useful when debugging, as you can locate the error log and then filter on the context of that error to get a full log trace.</p>
+<p>The point was raised about <code>LogicalThreadContext.Properties</code> not being particularly conducive for testing. In addition it’s something that should probably be abstracted out of the code as an aspect, because it’s probably unrelated to any business requirements and could be thought of as boilerplate. To deal with this, I’ve created a <a href="https://github.com/yesmarket/log4net.Extensions" target="_blank" rel="external">log4net.Extensions</a> library that can be used to add testability to contextual logging:</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyService</span> : <span class="title">IService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogContextFactory _logContextFactory;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Service</span>(<span class="params">ILogContextFactory logContextFactory</span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        _logContextFactory = logContextFactory;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DoSomething</span>(<span class="params"></span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">using</span> (_logContextFactory.New().With(<span class="string">"context"</span>, Guid.NewGuid()))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>I’ve also created an <a href="https://github.com/yesmarket/log4net.Extensions" target="_blank" rel="external">log4net.AutoFac</a> library, which allows for abstracting out the establishment of context altogether when using the <a href="http://autofac.org/" target="_blank" rel="external">AutoFac</a> IoC container.</p>
+<p>The log4net.Extensions and log4net.AutoFac libraries have been pushed to nuget. Be sure to check them out and let me know what you think.</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://localhost:4000/2015/07/contextual-logging-with-log4net/" data-id="cil50al2h000kk8vtvj0ygayc" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://localhost:4000/2015/07/contextual-logging-with-log4net/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NET/">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  
+  
+</article>
+
+
+
+  
+
+
+
+
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          
+  <div class="sidebar-module sidebar-module-inset">
+  <h4>About</h4>
+  <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+
+</div>
+
+
+  
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tags</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">4</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Tag Cloud</h4>
+    <p class="tagcloud">
+      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/AWS/" style="font-size: 10px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a>
+    </p>
+  </div>
+
+
+  
+  <div class="sidebar-module">
+    <h4>Archives</h4>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
+  </div>
+
+
+
+  
+  <div class="sidebar-module">
+    <h4>Recents</h4>
+    <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2015/08/scoped-bindings-in-specflow/">Scoped Bindings in SpecFlow</a>
+        </li>
+      
+        <li>
+          <a href="/2015/08/specflow-who-writes-the-specifications/">SpecFlow - who writes the specifications?</a>
+        </li>
+      
+        <li>
+          <a href="/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/">AWS S3 as FTP and policy granularity issues</a>
+        </li>
+      
+        <li>
+          <a href="/2015/07/contextual-logging-with-log4net/">contextual logging with log4net</a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+
+        </div>
+    </div>
+  </div>
+  <footer class="blog-footer">
+  <div class="container">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Ryan Bartsch<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+  
+<script>
+  var disqus_shortname = 'rtblogg';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha384-8gBf6Y4YYq7Jx97PIqmTwLPin4hxIzQw5aDmUg/DDhul9fFpbbLcLh3nTIIDJKhx" crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+</body>
+</html>
