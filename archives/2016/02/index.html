@@ -3,18 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>AWS S3 as FTP and policy granularity issues | RTBLOGG</title>
+  <title>Archives: 2016/2 | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate Kentico websites. Makes total sense to outsource this work as they’ve got the experti">
-<meta property="og:type" content="article">
-<meta property="og:title" content="AWS S3 as FTP and policy granularity issues">
-<meta property="og:url" content="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/index.html">
+  <meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="RTBLOGG">
+<meta property="og:url" content="http://localhost:4000/archives/2016/02/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description" content="At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate Kentico websites. Makes total sense to outsource this work as they’ve got the experti">
-<meta property="og:updated_time" content="2016-02-27T10:11:57.587Z">
+<meta property="og:description">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AWS S3 as FTP and policy granularity issues">
-<meta name="twitter:description" content="At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate Kentico websites. Makes total sense to outsource this work as they’ve got the experti">
+<meta name="twitter:title" content="RTBLOGG">
+<meta name="twitter:description">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -53,7 +52,7 @@
           <li><a class=""
                  href="/index.html">Home</a></li>
         
-          <li><a class=""
+          <li><a class="active"
                  href="/archives/">Archives</a></li>
         
       </ul>
@@ -79,92 +78,40 @@
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          <article id="post-aws-s3-as-ftp-and-policy-granularity-issues" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
+          
+  
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2016" class="archive-year">2016</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <header class="archive-article-header">
     
   
-    <h1 class="article-title" itemprop="name">
-      AWS S3 as FTP and policy granularity issues
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2016/02/goodbye-wordpress-hello-hexo/">Goodbye WordPress hello Hexo</a>
     </h1>
   
 
 
-  </header>
-
-  <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" class="article-date"><time datetime="2015-07-09T05:32:46.000Z" itemprop="datePublished">2015-07-09</time></a>
+  <a href="/2016/02/goodbye-wordpress-hello-hexo/" class="archive-article-date"><time datetime="2016-02-27T13:06:37.000Z" itemprop="datePublished">February 27th</time></a>
 </div>
 
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate <a href="http://www.kentico.com/" target="_blank" rel="external">Kentico</a> websites. Makes total sense to outsource this work as they’ve got the expertise and “CMS” isn’t a core capability of my workplace. Anyway they need the content and databases for both sites, which sums to about 10 gig in total. They don’t have an FTP server and the suggestion was made to physically deliver this data securely via traditional means…</p>
-<p>I didn’t think much of this suggestion, so I took matters into my own hands and created an <a href="http://aws.amazon.com/s3/" target="_blank" rel="external">AWS S3</a> bucket with the intent that the consultancy could access this bucket (and only this bucket) using something like <a href="http://www.cloudberrylab.com/free-amazon-s3-explorer-cloudfront-IAM.aspx" target="_blank" rel="external">CloudBerry Explorer</a>, or <a href="http://www.s3fox.net/" target="_blank" rel="external">S3Fox</a>. I created a user for the consultancy in <a href="http://aws.amazon.com/iam/" target="_blank" rel="external">IAM</a>, saved the access/secret key pair, and went to work on defining and attaching a policy to this user. I tried a couple different policies, but I couldn’t see any S3 buckets! When I used my own access key, everything was good and I could see everything I was supposed to. Eventually, I just used the standard <a href="http://docs.aws.amazon.com/directoryservice/latest/adminguide/role_s3_full_access.html" target="_blank" rel="external">AmazonS3FullAccess</a> policy and what do you know, I could see everything! This, however, wasn’t a viable solution, as the consultancy could see and get to the contents of ALL our other S3 buckets. I did some deeper investigation and came upon an <a href="http://stackoverflow.com/questions/6615168/s3-policy-limiting-access-to-only-one-bucket-listing-included" target="_blank" rel="external">article on StackOverflow</a>, which perfectly outlined my problem.</p>
-<p>Turns out there no way to let the user list only selected buckets. You can either list all buckets or none. This seems like a bit of an oversight by Amazon in my opinion.</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cil59dvsb0000ucvtvy22rm86" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-        <a href="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/#disqus_thread" class="article-comment-link">
-          <i class="fa fa-comment"></i> Comments
-        </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AWS/">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
-
-
-    </footer>
-  </div>
-
-  
-  <section id="comments">
-    <div id="disqus_thread">
-      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    </div>
-  </section>
-  
-  
-  
-    
-<ul id="article-nav" class="nav nav-pills nav-justified">
-  
-  <li role="presentation">
-    <a href="/2015/07/contextual-logging-with-log4net/" id="article-nav-older" class="article-nav-link-wrap">
-      <i class="fa fa-chevron-left pull-left"></i>
-      <span class="article-nav-link-title">contextual logging with log4net</span>
-    </a>
-  </li>
-  
-  
-  <li role="presentation">
-    <a href="/2015/08/specflow-who-writes-the-specifications/" id="article-nav-newer" class="article-nav-link-wrap">
-      <span class="article-nav-link-title">SpecFlow - who writes the specifications?</span>
-      <i class="fa fa-chevron-right pull-right"></i>
-    </a>
-  </li>
-  
-</ul>
-
-
-  
+  </header>
 </article>
+
+  
+  
+    </div></section>
+  
 
 
 
@@ -253,13 +200,11 @@
 <script>
   var disqus_shortname = 'rtblogg';
   
-  var disqus_url = 'http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/';
-  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>

@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>AWS S3 as FTP and policy granularity issues | RTBLOGG</title>
+  <title>Goodbye WordPress hello Hexo | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate Kentico websites. Makes total sense to outsource this work as they’ve got the experti">
+  <meta name="description" content="About half a year ago I started this blog. I played around with a few diferent CMS platforms, but eventually settled on WordPress. At the time the main reasons I chose WordPress were because of the la">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AWS S3 as FTP and policy granularity issues">
-<meta property="og:url" content="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/index.html">
+<meta property="og:title" content="Goodbye WordPress hello Hexo">
+<meta property="og:url" content="http://localhost:4000/2016/02/goodbye-wordpress-hello-hexo/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description" content="At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate Kentico websites. Makes total sense to outsource this work as they’ve got the experti">
-<meta property="og:updated_time" content="2016-02-27T10:11:57.587Z">
+<meta property="og:description" content="About half a year ago I started this blog. I played around with a few diferent CMS platforms, but eventually settled on WordPress. At the time the main reasons I chose WordPress were because of the la">
+<meta property="og:updated_time" content="2016-03-01T12:32:37.456Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="AWS S3 as FTP and policy granularity issues">
-<meta name="twitter:description" content="At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate Kentico websites. Makes total sense to outsource this work as they’ve got the experti">
+<meta name="twitter:title" content="Goodbye WordPress hello Hexo">
+<meta name="twitter:description" content="About half a year ago I started this blog. I played around with a few diferent CMS platforms, but eventually settled on WordPress. At the time the main reasons I chose WordPress were because of the la">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -79,13 +79,13 @@
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          <article id="post-aws-s3-as-ftp-and-policy-granularity-issues" class="article article-type-post" itemscope itemprop="blogPost">
+          <article id="post-goodbye-wordpress-hello-hexo" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
     
   
     <h1 class="article-title" itemprop="name">
-      AWS S3 as FTP and policy granularity issues
+      Goodbye WordPress hello Hexo
     </h1>
   
 
@@ -94,7 +94,7 @@
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" class="article-date"><time datetime="2015-07-09T05:32:46.000Z" itemprop="datePublished">2015-07-09</time></a>
+  <a href="/2016/02/goodbye-wordpress-hello-hexo/" class="article-date"><time datetime="2016-02-27T13:06:37.000Z" itemprop="datePublished">2016-02-27</time></a>
 </div>
 
     
@@ -105,9 +105,35 @@
 
     <div class="article-entry" itemprop="articleBody">
       
-        <p>At the company where I work, we’ve procured a consultancy to do some work on the upgrade and merging of 2 separate <a href="http://www.kentico.com/" target="_blank" rel="external">Kentico</a> websites. Makes total sense to outsource this work as they’ve got the expertise and “CMS” isn’t a core capability of my workplace. Anyway they need the content and databases for both sites, which sums to about 10 gig in total. They don’t have an FTP server and the suggestion was made to physically deliver this data securely via traditional means…</p>
-<p>I didn’t think much of this suggestion, so I took matters into my own hands and created an <a href="http://aws.amazon.com/s3/" target="_blank" rel="external">AWS S3</a> bucket with the intent that the consultancy could access this bucket (and only this bucket) using something like <a href="http://www.cloudberrylab.com/free-amazon-s3-explorer-cloudfront-IAM.aspx" target="_blank" rel="external">CloudBerry Explorer</a>, or <a href="http://www.s3fox.net/" target="_blank" rel="external">S3Fox</a>. I created a user for the consultancy in <a href="http://aws.amazon.com/iam/" target="_blank" rel="external">IAM</a>, saved the access/secret key pair, and went to work on defining and attaching a policy to this user. I tried a couple different policies, but I couldn’t see any S3 buckets! When I used my own access key, everything was good and I could see everything I was supposed to. Eventually, I just used the standard <a href="http://docs.aws.amazon.com/directoryservice/latest/adminguide/role_s3_full_access.html" target="_blank" rel="external">AmazonS3FullAccess</a> policy and what do you know, I could see everything! This, however, wasn’t a viable solution, as the consultancy could see and get to the contents of ALL our other S3 buckets. I did some deeper investigation and came upon an <a href="http://stackoverflow.com/questions/6615168/s3-policy-limiting-access-to-only-one-bucket-listing-included" target="_blank" rel="external">article on StackOverflow</a>, which perfectly outlined my problem.</p>
-<p>Turns out there no way to let the user list only selected buckets. You can either list all buckets or none. This seems like a bit of an oversight by Amazon in my opinion.</p>
+        <p>About half a year ago I started this blog. I played around with a few diferent CMS platforms, but eventually settled on WordPress. At the time the main reasons I chose WordPress were because of the large number of available themes and plugins, as well as the existance of (free tier eligible) WordPress AWS AMIs. Basically, it was the quickest and easiest option based on my knowledge at the time. Since that time, my AWS free tier eligibility has expired and I haven’t exactly been prolific in my blogging - something I intend to change. Anyways, I started investigating static site generators with the intent of publishing a static site to S3 so that I could shut down my WordPress EC2 instance. Evidently I didn’t even need to use S3, instead opting to use GitHub pages, which is itself a discussion for another day.</p>
+<p>When it came to choosing the static site generator platform, there were many options to choose from as per <a href="http://www.staticgen.com" target="_blank" rel="external">staticgen.com</a>. I couldn’t possibly trial them up w ith a few criteria to narrow the field. The criteria was as follows:</p>
+<ul>
+<li>open source</li>
+<li>amount of DEV activity (as evidenced by the number of GitHub stars and forks)</li>
+<li>language</li>
+<li>simplicity</li>
+<li>intent (i.e. whether the plaform was specifically intended for blogs)</li>
+<li>existing themes that I like</li>
+<li>plugins</li>
+</ul>
+<p>From this list of criterias, I came up with <a href="http://www.staticgen.com/octopress" target="_blank" rel="external">Octopress</a> and <a href="http://www.staticgen.com/hexo" target="_blank" rel="external">Hexo</a>. I gave both a quick trial run, but eventually chose Hexo because of how easy it was to use as well as the fact I found a really simple bootstrap theme that I liked.</p>
+<p>I probably took me about an hour all up to port my WordPress blog to Hexo and to get it up and running. To show how easy it was, here are the steps that I took:</p>
+<ol>
+<li>Install Hexo as well as the <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">server module</a> for Hexo:<br><code lang="posh" linenumbers="off">$ npm install -g hexo-cli</code><br><code lang="posh" linenumbers="off">$ npm install hexo-server –save</code></li>
+<li>Do the Hello World thing:<br><code lang="posh" linenumbers="off">$ hexo new hello-world</code></li>
+<li>Start the Hexo server. The website will run at localhost:4000 by default:<br><code lang="posh" linenumbers="off">$ hexo server</code></li>
+<li><a href="https://hexo.io/themes/" target="_blank" rel="external">Find an existing theme</a>, and then clone your chosen theme into the themes directory. I chose the <a href="http://cgmartin.github.io/hexo-theme-bootstrap-blog/" target="_blank" rel="external">hexo-theme-bootstrap-blog</a> theme.<br><code lang="posh" linenumbers="off">$ cd themes</code><br><code lang="posh" linenumbers="off">$ git clone git@github.com:cgmartin/hexo-theme-bootstrap-blog.git</code></li>
+<li>Install the hexo-migrator-wordpress plugin.<br><code lang="posh" linenumbers="off">$ npm install hexo-migrator-wordpress –save</code></li>
+<li><a href="https://en.support.wordpress.com/export/" target="_blank" rel="external">Migrate existing posts from WordPress</a>.</li>
+<li>Run the Hexo migrator to import your WordPress posts into Hexo:<br><code lang="posh" linenumbers="off">$ hexo migrate wordpress <source></code></li>
+<li>Run the site locally<br><code lang="posh" linenumbers="off">$ hexo server</code><br>92 Tweek the markdown of the posts to fix any formtting/display issues</li>
+<li>Initialise git repo and push Hexo site to GitHub.<br><code lang="posh" linenumbers="off">$ git init</code><br><code lang="posh" linenumbers="off">$ git add –all</code><br><code lang="posh" linenumbers="off">$ git commit -m “first commit”</code></li>
+<li>Generate the static output:<br><code lang="posh" linenumbers="off">$ hexo generate</code></li>
+<li>Push the generated output to a to a seperate GitHub pages repo. Note: the output should be excluded from the main Hexo repo via the .gitignore</li>
+<li>Setup DNS CNAME entry to point to the GitHub pages URL.</li>
+<li>Wait a couple minutes for the DNS configurations to take effect.</li>
+</ol>
+<p>The only other thing to do is terminate my WordPress EC2 instance and profit!</p>
 
       
     </div>
@@ -118,16 +144,16 @@
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cil59dvsb0000ucvtvy22rm86" class="article-share-link">
+      <a data-url="http://localhost:4000/2016/02/goodbye-wordpress-hello-hexo/" data-id="cil59dvt1000kucvtwvidzulx" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
-        <a href="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/#disqus_thread" class="article-comment-link">
+        <a href="http://localhost:4000/2016/02/goodbye-wordpress-hello-hexo/#disqus_thread" class="article-comment-link">
           <i class="fa fa-comment"></i> Comments
         </a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AWS/">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AWS/">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WordPress/">WordPress</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/staticgen/">staticgen</a></li></ul>
 
 
     </footer>
@@ -146,19 +172,12 @@
 <ul id="article-nav" class="nav nav-pills nav-justified">
   
   <li role="presentation">
-    <a href="/2015/07/contextual-logging-with-log4net/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/08/scoped-bindings-in-specflow/" id="article-nav-older" class="article-nav-link-wrap">
       <i class="fa fa-chevron-left pull-left"></i>
-      <span class="article-nav-link-title">contextual logging with log4net</span>
+      <span class="article-nav-link-title">Scoped Bindings in SpecFlow</span>
     </a>
   </li>
   
-  
-  <li role="presentation">
-    <a href="/2015/08/specflow-who-writes-the-specifications/" id="article-nav-newer" class="article-nav-link-wrap">
-      <span class="article-nav-link-title">SpecFlow - who writes the specifications?</span>
-      <i class="fa fa-chevron-right pull-right"></i>
-    </a>
-  </li>
   
 </ul>
 
@@ -253,7 +272,7 @@
 <script>
   var disqus_shortname = 'rtblogg';
   
-  var disqus_url = 'http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/';
+  var disqus_url = 'http://localhost:4000/2016/02/goodbye-wordpress-hello-hexo/';
   
   (function(){
     var dsq = document.createElement('script');

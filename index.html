@@ -80,6 +80,94 @@
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-goodbye-wordpress-hello-hexo" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/goodbye-wordpress-hello-hexo/">Goodbye WordPress hello Hexo</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/02/goodbye-wordpress-hello-hexo/" class="article-date"><time datetime="2016-02-27T13:06:37.000Z" itemprop="datePublished">2016-02-27</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>About half a year ago I started this blog. I played around with a few diferent CMS platforms, but eventually settled on WordPress. At the time the main reasons I chose WordPress were because of the large number of available themes and plugins, as well as the existance of (free tier eligible) WordPress AWS AMIs. Basically, it was the quickest and easiest option based on my knowledge at the time. Since that time, my AWS free tier eligibility has expired and I haven’t exactly been prolific in my blogging - something I intend to change. Anyways, I started investigating static site generators with the intent of publishing a static site to S3 so that I could shut down my WordPress EC2 instance. Evidently I didn’t even need to use S3, instead opting to use GitHub pages, which is itself a discussion for another day.</p>
+<p>When it came to choosing the static site generator platform, there were many options to choose from as per <a href="http://www.staticgen.com" target="_blank" rel="external">staticgen.com</a>. I couldn’t possibly trial them up w ith a few criteria to narrow the field. The criteria was as follows:</p>
+<ul>
+<li>open source</li>
+<li>amount of DEV activity (as evidenced by the number of GitHub stars and forks)</li>
+<li>language</li>
+<li>simplicity</li>
+<li>intent (i.e. whether the plaform was specifically intended for blogs)</li>
+<li>existing themes that I like</li>
+<li>plugins</li>
+</ul>
+<p>From this list of criterias, I came up with <a href="http://www.staticgen.com/octopress" target="_blank" rel="external">Octopress</a> and <a href="http://www.staticgen.com/hexo" target="_blank" rel="external">Hexo</a>. I gave both a quick trial run, but eventually chose Hexo because of how easy it was to use as well as the fact I found a really simple bootstrap theme that I liked.</p>
+<p>I probably took me about an hour all up to port my WordPress blog to Hexo and to get it up and running. To show how easy it was, here are the steps that I took:</p>
+<ol>
+<li>Install Hexo as well as the <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">server module</a> for Hexo:<br><code lang="posh" linenumbers="off">$ npm install -g hexo-cli</code><br><code lang="posh" linenumbers="off">$ npm install hexo-server –save</code></li>
+<li>Do the Hello World thing:<br><code lang="posh" linenumbers="off">$ hexo new hello-world</code></li>
+<li>Start the Hexo server. The website will run at localhost:4000 by default:<br><code lang="posh" linenumbers="off">$ hexo server</code></li>
+<li><a href="https://hexo.io/themes/" target="_blank" rel="external">Find an existing theme</a>, and then clone your chosen theme into the themes directory. I chose the <a href="http://cgmartin.github.io/hexo-theme-bootstrap-blog/" target="_blank" rel="external">hexo-theme-bootstrap-blog</a> theme.<br><code lang="posh" linenumbers="off">$ cd themes</code><br><code lang="posh" linenumbers="off">$ git clone git@github.com:cgmartin/hexo-theme-bootstrap-blog.git</code></li>
+<li>Install the hexo-migrator-wordpress plugin.<br><code lang="posh" linenumbers="off">$ npm install hexo-migrator-wordpress –save</code></li>
+<li><a href="https://en.support.wordpress.com/export/" target="_blank" rel="external">Migrate existing posts from WordPress</a>.</li>
+<li>Run the Hexo migrator to import your WordPress posts into Hexo:<br><code lang="posh" linenumbers="off">$ hexo migrate wordpress <source></code></li>
+<li>Run the site locally<br><code lang="posh" linenumbers="off">$ hexo server</code><br>92 Tweek the markdown of the posts to fix any formtting/display issues</li>
+<li>Initialise git repo and push Hexo site to GitHub.<br><code lang="posh" linenumbers="off">$ git init</code><br><code lang="posh" linenumbers="off">$ git add –all</code><br><code lang="posh" linenumbers="off">$ git commit -m “first commit”</code></li>
+<li>Generate the static output:<br><code lang="posh" linenumbers="off">$ hexo generate</code></li>
+<li>Push the generated output to a to a seperate GitHub pages repo. Note: the output should be excluded from the main Hexo repo via the .gitignore</li>
+<li>Setup DNS CNAME entry to point to the GitHub pages URL.</li>
+<li>Wait a couple minutes for the DNS configurations to take effect.</li>
+</ol>
+<p>The only other thing to do is terminate my WordPress EC2 instance and profit!</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://localhost:4000/2016/02/goodbye-wordpress-hello-hexo/" data-id="cil59dvt1000kucvtwvidzulx" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://localhost:4000/2016/02/goodbye-wordpress-hello-hexo/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AWS/">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WordPress/">WordPress</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/staticgen/">staticgen</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  
+  
+</article>
+
+
+
+  
     <article id="post-scoped-bindings-in-specflow" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -171,7 +259,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/08/scoped-bindings-in-specflow/" data-id="cil50al2d000fk8vt2zc17g5y" class="article-share-link">
+      <a data-url="http://localhost:4000/2015/08/scoped-bindings-in-specflow/" data-id="cil59dvsy000fucvtrhnm1u1c" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -233,7 +321,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/08/specflow-who-writes-the-specifications/" data-id="cil50al270005k8vtc4geyryp" class="article-share-link">
+      <a data-url="http://localhost:4000/2015/08/specflow-who-writes-the-specifications/" data-id="cil59dvst0005ucvtrf1nr6s9" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -295,7 +383,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cil50al1l0000k8vtl5gvebz4" class="article-share-link">
+      <a data-url="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cil59dvsb0000ucvtvy22rm86" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -373,7 +461,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/07/contextual-logging-with-log4net/" data-id="cil50al2h000kk8vtvj0ygayc" class="article-share-link">
+      <a data-url="http://localhost:4000/2015/07/contextual-logging-with-log4net/" data-id="cil59dvt5000sucvtoljdn6ix" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -416,7 +504,7 @@ public void WhenWePressTheButton()
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">4</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub/">GitHub</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Hexo/">Hexo</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/WordPress/">WordPress</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/staticgen/">staticgen</a><span class="sidebar-module-list-count">1</span></li></ul>
   </div>
 
 
@@ -425,7 +513,7 @@ public void WhenWePressTheButton()
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/AWS/" style="font-size: 10px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a>
+      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/AWS/" style="font-size: 13.33px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/staticgen/" style="font-size: 10px;">staticgen</a>
     </p>
   </div>
 
@@ -433,7 +521,7 @@ public void WhenWePressTheButton()
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/02/">February 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -442,6 +530,10 @@ public void WhenWePressTheButton()
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2016/02/goodbye-wordpress-hello-hexo/">Goodbye WordPress hello Hexo</a>
+        </li>
       
         <li>
           <a href="/2015/08/scoped-bindings-in-specflow/">Scoped Bindings in SpecFlow</a>
