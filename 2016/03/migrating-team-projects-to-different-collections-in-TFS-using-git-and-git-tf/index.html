@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Scoped Bindings in SpecFlow | RTBLOGG</title>
+  <title>Migrating team projects to different collections in TFS using git and git-tf | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="One of the things that I found slightly problematic about SpecFlow is the global scoping of step definitions within bound classes, specifically when there are multiple feature files referring to share">
+  <meta name="description" content="When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and git-tf as the integ">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Scoped Bindings in SpecFlow">
-<meta property="og:url" content="www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/index.html">
+<meta property="og:title" content="Migrating team projects to different collections in TFS using git and git-tf">
+<meta property="og:url" content="www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description" content="One of the things that I found slightly problematic about SpecFlow is the global scoping of step definitions within bound classes, specifically when there are multiple feature files referring to share">
-<meta property="og:updated_time" content="2016-02-27T10:11:49.436Z">
+<meta property="og:description" content="When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and git-tf as the integ">
+<meta property="og:updated_time" content="2016-03-07T11:35:36.210Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Scoped Bindings in SpecFlow">
-<meta name="twitter:description" content="One of the things that I found slightly problematic about SpecFlow is the global scoping of step definitions within bound classes, specifically when there are multiple feature files referring to share">
+<meta name="twitter:title" content="Migrating team projects to different collections in TFS using git and git-tf">
+<meta name="twitter:description" content="When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and git-tf as the integ">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -79,13 +79,13 @@
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          <article id="post-scoped-bindings-in-specflow" class="article article-type-post" itemscope itemprop="blogPost">
+          <article id="post-migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
     
   
     <h1 class="article-title" itemprop="name">
-      Scoped Bindings in SpecFlow
+      Migrating team projects to different collections in TFS using git and git-tf
     </h1>
   
 
@@ -94,7 +94,7 @@
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2015/08/scoped-bindings-in-specflow/" class="article-date"><time datetime="2015-08-03T02:42:43.000Z" itemprop="datePublished">2015-08-03</time></a>
+  <a href="/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" class="article-date"><time datetime="2016-03-07T11:17:17.000Z" itemprop="datePublished">2016-03-07</time></a>
 </div>
 
     
@@ -105,62 +105,40 @@
 
     <div class="article-entry" itemprop="articleBody">
       
-        <p>One of the things that I found slightly problematic about <a href="http://www.specflow.org/" target="_blank" rel="external">SpecFlow</a> is the global scoping of step definitions within bound classes, specifically when there are multiple feature files referring to shared step definitions.</p>
-<p><strong>So why do I feel this way?</strong></p>
-<p>Well, firstly there’s the reduced discoverability of step definitions. Sure you can use the build-in SpecFlow navigation feature to get to the definition, but this seems a little inefficient to me. I guess you could also use <a href="https://www.jetbrains.com/resharper/" target="_blank" rel="external">ReSharper</a>, but not everyone has this luxury. My other main gripe is that fact that you can’t use (or at least have to be careful using) private fields to maintain state for individual step definitions. The alternative is to use the ScenarioContext, which is a little over complicated for mine:</p>
-<pre lang="csharp">
-[Given(@"a property price of (.*)")]
-public void GivenAPropertyPriceOf(Decimal propertyPrice)
-{
-    ScenarioContext.Current.Set(propertyPrice, "propertyPrice");
-}
-
-[When(@"we press the button")]
-public void WhenWePressTheButton()
-{
-    var propertyPrice = ScenarioContext.Current.Get<decimal>("propertyPrice")
-    // ...
-}
-</decimal></pre>
-
-<p><strong>The solution – scoped bindings!</strong></p>
-<p>Scoped bindings allow the developer to have a one-to-one mapping between feature files and the step definitions defined by that feature. Sure we lose some reusability of individual step definitions, but in my opinion the pros outweigh the cons. The approach I’ve taken is to have my generated class files scoped to an associated feature as shown below:</p>
-<pre lang="csharp">
-    [Binding]
-    [Scope(Feature = "Name of Feature")]
-    public class Test
-    {
-        private decimal _propertyPrice;
-        private decimal _propertyValue;
-
-        [Given(@"a property price of (.*)")]
-        public void GivenAPropertyPriceOf(Decimal propertyPrice)
-        {
-            _propertyPrice = propertyPrice;
-        }
-
-        [Given(@"a property value of (.*)")]
-        public void GivenAPropertyValueOf(Decimal propertyValue)
-        {
-            _propertyValue = propertyValue;
-        }
-
-        [When(@"we press the button")]
-        public void WheneWePressTheButton()
-        {
-            // ...
-        }
-
-        [Then(@"the result is (.*)")]
-        public void ThenTheResultIs(Decimal result)
-        {
-            // ...
-        }
-    }
-</pre>
-
-<p>Now I’ve got quick and easy discoverability as well as the fact that I can use private fields without concern.</p>
-
+        <p>When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and <a href="https://gittf.codeplex.com" target="_blank" rel="external">git-tf</a> as the integration layer. This has worked pretty well as git enables me to be more productive in my role e.g. creating and switching between branches on a whim, logging/diffing, rebasing etc.</p>
+<p>Recently we decided to migrate to TFS 2015. The test migration upgrade was pretty smooth, but our existing team projects were very inconsistent in terms of naming conventions, process templates, branching strategies, security settings etc., also things that were broken in the old version (e.g. all the SSRS reports) were also broken in the new version after the migration. For these reasons, we decided we would do a clean install of TFS 2015 and migrate all the source code and work items across. We investigated a few tools, but most of them were pretty flakey or didn’t meet our requirements such as keeping a history of all check-ins.</p>
+<p>Since working with git-tf I had successfully deep cloned team projects from TFS with all their history and then performed commits (checkins) back to TFS with no issues. I had the thought that I could use git and git-tf to migrate all the source code to the new version of TFS. I started playing around with this idea and found that this was indeed possible. The only thing that I couldn’t do was migrate across the work item associations, but we’d already made this concession as the clean install approach meant that work items would get migrated across with new identifiers. A work item checkin policy had never really been enforced anyway and we came to the conclusion that this was a small price to pay for getting a fresh new system. As an aside, a work item check in policy will be enforced under TFS 2015.</p>
+<p>There were roughly 50 team projects of varying size that needed to get migrated, so I decided to script the whole thing in PowerShell. This included the following:</p>
+<ul>
+<li>creation of a new team project with a default master branch in the new collection using native-TFS and TFS-power-tool commands</li>
+<li>deep cloning the team project from the old collection using git-tf</li>
+<li>deep cloning the team project from the new collection using git-tf</li>
+<li>merging the old into the new - all done using native git commands</li>
+<li>checking everything in using git-tf</li>
+<li>setting up long running branches and folder structure for gitflow using native TFS commands and git-tf</li>
+</ul>
+<p>I scripted everything into a PowerShell module called TfsMigrationExtensions, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
+<pre><code>$ Initialize-TeamProject -collection $destinationcollection -teamprojectname $destinationname -workspace $workspacename
+$ Copy-TeamProject -sourcecollection $sourcecollection -sourcename $sourcename -sourcebranch $sourcebranch -destinationcollection $destinationcollection -destinationname $destinationname -usermappath $usermappath
+$ Set-GitFlow -collection $destinationcollection -teamprojectname $destinationname
+</code></pre><p>A few things to note.</p>
+<p><em>user mapping</em><br>There were a few times where user-mapping issues were encountered during the git-tf checkin. Presumably check-ins by someone that was removed from AD at some stage. When this happened, a USERMAP file was automatically created in the .git directory. I basically just modified the mappings, deleted the team project that was created using TFSDeleteProject command, and then re-ran the process, but this time specifying a -usermappath for the Copy-TeamProject command.</p>
+<p><em>the git merge</em><br>There were a few issues with the merging of the source repo with the destination repo in git as there were no common ancestor commits. The destination repo had some initialisation commits i.e. one for the team project creation in TFS and one for the creation of the master branch, while the source repo had all the check-ins from the source TFS collection. To get this to work I had to try a few different things. Eventually I got this working by doing the following steps:</p>
+<ol>
+<li>setting the old/source repo as a remote of the (destination) master</li>
+<li>creating a new temp branch off this remote and switching to this branch</li>
+<li>rebasing from master</li>
+<li>swiching back to the master branch</li>
+<li>(fast-forward) merging the temp branch into master.</li>
+</ol>
+<p>Even though there were no common commits, the rebase still worked! The git commands are as follows:</p>
+<pre><code>$ git remote add $source &quot;..\$source\.git\&quot;
+$ git fetch $localSource
+$ git checkout &quot;remotes/$source/master&quot; -b $source
+$ git rebase master
+$ git checkout master
+$ git merge $source
+</code></pre>
       
     </div>
 
@@ -170,16 +148,16 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cilhwbzd2000f0ovtejss96fb" class="article-share-link">
+      <a data-url="www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cilhwbzd2000k0ovtdyq6y3gz" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
-        <a href="www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/#disqus_thread" class="article-comment-link">
+        <a href="www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/#disqus_thread" class="article-comment-link">
           <i class="fa fa-comment"></i> Comments
         </a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NET/">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpecFlow/">SpecFlow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Testing/">Testing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PowerShell/">PowerShell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TFS/">TFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git-tf/">git-tf</a></li></ul>
 
 
     </footer>
@@ -198,19 +176,12 @@ public void WhenWePressTheButton()
 <ul id="article-nav" class="nav nav-pills nav-justified">
   
   <li role="presentation">
-    <a href="/2015/08/specflow-who-writes-the-specifications/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/02/goodbye-wordpress-hello-hexo/" id="article-nav-older" class="article-nav-link-wrap">
       <i class="fa fa-chevron-left pull-left"></i>
-      <span class="article-nav-link-title">SpecFlow - who writes the specifications?</span>
-    </a>
-  </li>
-  
-  
-  <li role="presentation">
-    <a href="/2016/02/goodbye-wordpress-hello-hexo/" id="article-nav-newer" class="article-nav-link-wrap">
       <span class="article-nav-link-title">Goodbye WordPress hello Hexo</span>
-      <i class="fa fa-chevron-right pull-right"></i>
     </a>
   </li>
+  
   
 </ul>
 
@@ -305,7 +276,7 @@ public void WhenWePressTheButton()
 <script>
   var disqus_shortname = 'rtblogg';
   
-  var disqus_url = 'www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/';
+  var disqus_url = 'www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/';
   
   (function(){
     var dsq = document.createElement('script');

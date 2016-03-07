@@ -5,15 +5,15 @@
   
   <title>RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="cool">
 <meta property="og:type" content="website">
 <meta property="og:title" content="RTBLOGG">
-<meta property="og:url" content="http://localhost:4000/index.html">
+<meta property="og:url" content="www.blog.ryanbartsch.com/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description">
+<meta property="og:description" content="cool">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RTBLOGG">
-<meta name="twitter:description">
+<meta name="twitter:description" content="cool">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -80,6 +80,98 @@
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/">Migrating team projects to different collections in TFS using git and git-tf</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" class="article-date"><time datetime="2016-03-07T11:17:17.000Z" itemprop="datePublished">2016-03-07</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and <a href="https://gittf.codeplex.com" target="_blank" rel="external">git-tf</a> as the integration layer. This has worked pretty well as git enables me to be more productive in my role e.g. creating and switching between branches on a whim, logging/diffing, rebasing etc.</p>
+<p>Recently we decided to migrate to TFS 2015. The test migration upgrade was pretty smooth, but our existing team projects were very inconsistent in terms of naming conventions, process templates, branching strategies, security settings etc., also things that were broken in the old version (e.g. all the SSRS reports) were also broken in the new version after the migration. For these reasons, we decided we would do a clean install of TFS 2015 and migrate all the source code and work items across. We investigated a few tools, but most of them were pretty flakey or didn’t meet our requirements such as keeping a history of all check-ins.</p>
+<p>Since working with git-tf I had successfully deep cloned team projects from TFS with all their history and then performed commits (checkins) back to TFS with no issues. I had the thought that I could use git and git-tf to migrate all the source code to the new version of TFS. I started playing around with this idea and found that this was indeed possible. The only thing that I couldn’t do was migrate across the work item associations, but we’d already made this concession as the clean install approach meant that work items would get migrated across with new identifiers. A work item checkin policy had never really been enforced anyway and we came to the conclusion that this was a small price to pay for getting a fresh new system. As an aside, a work item check in policy will be enforced under TFS 2015.</p>
+<p>There were roughly 50 team projects of varying size that needed to get migrated, so I decided to script the whole thing in PowerShell. This included the following:</p>
+<ul>
+<li>creation of a new team project with a default master branch in the new collection using native-TFS and TFS-power-tool commands</li>
+<li>deep cloning the team project from the old collection using git-tf</li>
+<li>deep cloning the team project from the new collection using git-tf</li>
+<li>merging the old into the new - all done using native git commands</li>
+<li>checking everything in using git-tf</li>
+<li>setting up long running branches and folder structure for gitflow using native TFS commands and git-tf</li>
+</ul>
+<p>I scripted everything into a PowerShell module called TfsMigrationExtensions, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
+<pre><code>$ Initialize-TeamProject -collection $destinationcollection -teamprojectname $destinationname -workspace $workspacename
+$ Copy-TeamProject -sourcecollection $sourcecollection -sourcename $sourcename -sourcebranch $sourcebranch -destinationcollection $destinationcollection -destinationname $destinationname -usermappath $usermappath
+$ Set-GitFlow -collection $destinationcollection -teamprojectname $destinationname
+</code></pre><p>A few things to note.</p>
+<p><em>user mapping</em><br>There were a few times where user-mapping issues were encountered during the git-tf checkin. Presumably check-ins by someone that was removed from AD at some stage. When this happened, a USERMAP file was automatically created in the .git directory. I basically just modified the mappings, deleted the team project that was created using TFSDeleteProject command, and then re-ran the process, but this time specifying a -usermappath for the Copy-TeamProject command.</p>
+<p><em>the git merge</em><br>There were a few issues with the merging of the source repo with the destination repo in git as there were no common ancestor commits. The destination repo had some initialisation commits i.e. one for the team project creation in TFS and one for the creation of the master branch, while the source repo had all the check-ins from the source TFS collection. To get this to work I had to try a few different things. Eventually I got this working by doing the following steps:</p>
+<ol>
+<li>setting the old/source repo as a remote of the (destination) master</li>
+<li>creating a new temp branch off this remote and switching to this branch</li>
+<li>rebasing from master</li>
+<li>swiching back to the master branch</li>
+<li>(fast-forward) merging the temp branch into master.</li>
+</ol>
+<p>Even though there were no common commits, the rebase still worked! The git commands are as follows:</p>
+<pre><code>$ git remote add $source &quot;..\$source\.git\&quot;
+$ git fetch $localSource
+$ git checkout &quot;remotes/$source/master&quot; -b $source
+$ git rebase master
+$ git checkout master
+$ git merge $source
+</code></pre>
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cilhwbzd2000k0ovtdyq6y3gz" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PowerShell/">PowerShell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TFS/">TFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git-tf/">git-tf</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  
+  
+</article>
+
+
+
+  
     <article id="post-goodbye-wordpress-hello-hexo" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -127,7 +219,8 @@
 <li>Install the hexo-migrator-wordpress plugin.<br><code lang="posh" linenumbers="off">$ npm install hexo-migrator-wordpress –save</code></li>
 <li><a href="https://en.support.wordpress.com/export/" target="_blank" rel="external">Migrate existing posts from WordPress</a>.</li>
 <li>Run the Hexo migrator to import your WordPress posts into Hexo:<br><code lang="posh" linenumbers="off">$ hexo migrate wordpress <source></code></li>
-<li>Run the site locally<br><code lang="posh" linenumbers="off">$ hexo server</code><br>92 Tweek the markdown of the posts to fix any formtting/display issues</li>
+<li>Run the site locally<br><code lang="posh" linenumbers="off">$ hexo server</code></li>
+<li>Tweek the markdown of the posts to fix any formtting/display issues.</li>
 <li>Initialise git repo and push Hexo site to GitHub.<br><code lang="posh" linenumbers="off">$ git init</code><br><code lang="posh" linenumbers="off">$ git add –all</code><br><code lang="posh" linenumbers="off">$ git commit -m “first commit”</code></li>
 <li>Generate the static output:<br><code lang="posh" linenumbers="off">$ hexo generate</code></li>
 <li>Push the generated output to a to a seperate GitHub pages repo. Note: the output should be excluded from the main Hexo repo via the .gitignore</li>
@@ -145,11 +238,11 @@
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2016/02/goodbye-wordpress-hello-hexo/" data-id="cil59dvt1000kucvtwvidzulx" class="article-share-link">
+      <a data-url="www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cilhwbzdh000r0ovtwbqcvsol" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
-        <a href="http://localhost:4000/2016/02/goodbye-wordpress-hello-hexo/#disqus_thread" class="article-comment-link">
+        <a href="www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/#disqus_thread" class="article-comment-link">
           <i class="fa fa-comment"></i> Comments
         </a>
       
@@ -259,11 +352,11 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/08/scoped-bindings-in-specflow/" data-id="cil59dvsy000fucvtrhnm1u1c" class="article-share-link">
+      <a data-url="www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cilhwbzd2000f0ovtejss96fb" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
-        <a href="http://localhost:4000/2015/08/scoped-bindings-in-specflow/#disqus_thread" class="article-comment-link">
+        <a href="www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/#disqus_thread" class="article-comment-link">
           <i class="fa fa-comment"></i> Comments
         </a>
       
@@ -321,11 +414,11 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/08/specflow-who-writes-the-specifications/" data-id="cil59dvst0005ucvtrf1nr6s9" class="article-share-link">
+      <a data-url="www.blog.ryanbartsch.com/2015/08/specflow-who-writes-the-specifications/" data-id="cilhwbzd200050ovt0xky9pyr" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
-        <a href="http://localhost:4000/2015/08/specflow-who-writes-the-specifications/#disqus_thread" class="article-comment-link">
+        <a href="www.blog.ryanbartsch.com/2015/08/specflow-who-writes-the-specifications/#disqus_thread" class="article-comment-link">
           <i class="fa fa-comment"></i> Comments
         </a>
       
@@ -383,11 +476,11 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cil59dvsb0000ucvtvy22rm86" class="article-share-link">
+      <a data-url="www.blog.ryanbartsch.com/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cilhwbzcm00000ovtyq7b2r6y" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
-        <a href="http://localhost:4000/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/#disqus_thread" class="article-comment-link">
+        <a href="www.blog.ryanbartsch.com/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/#disqus_thread" class="article-comment-link">
           <i class="fa fa-comment"></i> Comments
         </a>
       
@@ -461,11 +554,11 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://localhost:4000/2015/07/contextual-logging-with-log4net/" data-id="cil59dvt5000sucvtoljdn6ix" class="article-share-link">
+      <a data-url="www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/" data-id="cilhwbzdx00110ovtowsobypr" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
-        <a href="http://localhost:4000/2015/07/contextual-logging-with-log4net/#disqus_thread" class="article-comment-link">
+        <a href="www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/#disqus_thread" class="article-comment-link">
           <i class="fa fa-comment"></i> Comments
         </a>
       
@@ -493,7 +586,7 @@ public void WhenWePressTheButton()
           
   <div class="sidebar-module sidebar-module-inset">
   <h4>About</h4>
-  <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+  Hello, my name is Ryan Bartsch and I'm a software DEV guy from Adelaide, Australia. 
 
 </div>
 
@@ -504,7 +597,7 @@ public void WhenWePressTheButton()
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub/">GitHub</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Hexo/">Hexo</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/WordPress/">WordPress</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/staticgen/">staticgen</a><span class="sidebar-module-list-count">1</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub/">GitHub</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Hexo/">Hexo</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/PowerShell/">PowerShell</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TFS/">TFS</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/WordPress/">WordPress</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/">git</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git-tf/">git-tf</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/staticgen/">staticgen</a><span class="sidebar-module-list-count">1</span></li></ul>
   </div>
 
 
@@ -513,7 +606,7 @@ public void WhenWePressTheButton()
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/AWS/" style="font-size: 13.33px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/GitHub/" style="font-size: 10px;">GitHub</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/staticgen/" style="font-size: 10px;">staticgen</a>
+      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/AWS/" style="font-size: 13.33px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/GitHub/" style="font-size: 13.33px;">GitHub</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/PowerShell/" style="font-size: 10px;">PowerShell</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/TFS/" style="font-size: 10px;">TFS</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/git-tf/" style="font-size: 10px;">git-tf</a> <a href="/tags/staticgen/" style="font-size: 10px;">staticgen</a>
     </p>
   </div>
 
@@ -521,7 +614,7 @@ public void WhenWePressTheButton()
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/02/">February 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/02/">February 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -530,6 +623,10 @@ public void WhenWePressTheButton()
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/">Migrating team projects to different collections in TFS using git and git-tf</a>
+        </li>
       
         <li>
           <a href="/2016/02/goodbye-wordpress-hello-hexo/">Goodbye WordPress hello Hexo</a>
@@ -545,10 +642,6 @@ public void WhenWePressTheButton()
       
         <li>
           <a href="/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/">AWS S3 as FTP and policy granularity issues</a>
-        </li>
-      
-        <li>
-          <a href="/2015/07/contextual-logging-with-log4net/">contextual logging with log4net</a>
         </li>
       
     </ul>
@@ -586,6 +679,9 @@ public void WhenWePressTheButton()
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
 
 
 <script src="/js/script.js" type="text/javascript"></script>
