@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/index.html">
 <meta property="og:site_name" content="RTBLOGG">
 <meta property="og:description" content="When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and git-tf as the integ">
-<meta property="og:updated_time" content="2016-03-07T11:35:36.210Z">
+<meta property="og:updated_time" content="2016-03-08T12:09:27.750Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Migrating team projects to different collections in TFS using git and git-tf">
 <meta name="twitter:description" content="When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and git-tf as the integ">
@@ -117,7 +117,7 @@
 <li>checking everything in using git-tf</li>
 <li>setting up long running branches and folder structure for gitflow using native TFS commands and git-tf</li>
 </ul>
-<p>I scripted everything into a PowerShell module called TfsMigrationExtensions, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
+<p>I scripted everything into a PowerShell module called <a href="https://github.com/yesmarket/TfsMigrationExtensions" target="_blank" rel="external">TfsMigrationExtensions</a>, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
 <pre><code>$ Initialize-TeamProject -collection $destinationcollection -teamprojectname $destinationname -workspace $workspacename
 $ Copy-TeamProject -sourcecollection $sourcecollection -sourcename $sourcename -sourcebranch $sourcebranch -destinationcollection $destinationcollection -destinationname $destinationname -usermappath $usermappath
 $ Set-GitFlow -collection $destinationcollection -teamprojectname $destinationname

@@ -118,7 +118,7 @@
 <li>checking everything in using git-tf</li>
 <li>setting up long running branches and folder structure for gitflow using native TFS commands and git-tf</li>
 </ul>
-<p>I scripted everything into a PowerShell module called TfsMigrationExtensions, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
+<p>I scripted everything into a PowerShell module called <a href="https://github.com/yesmarket/TfsMigrationExtensions" target="_blank" rel="external">TfsMigrationExtensions</a>, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
 <pre><code>$ Initialize-TeamProject -collection $destinationcollection -teamprojectname $destinationname -workspace $workspacename
 $ Copy-TeamProject -sourcecollection $sourcecollection -sourcename $sourcename -sourcebranch $sourcebranch -destinationcollection $destinationcollection -destinationname $destinationname -usermappath $usermappath
 $ Set-GitFlow -collection $destinationcollection -teamprojectname $destinationname
@@ -212,7 +212,7 @@ $ git merge $source
 <p>From this list of criterias, I came up with <a href="http://www.staticgen.com/octopress" target="_blank" rel="external">Octopress</a> and <a href="http://www.staticgen.com/hexo" target="_blank" rel="external">Hexo</a>. I gave both a quick trial run, but eventually chose Hexo because of how easy it was to use as well as the fact I found a really simple bootstrap theme that I liked.</p>
 <p>I probably took me about an hour all up to port my WordPress blog to Hexo and to get it up and running. To show how easy it was, here are the steps that I took:</p>
 <ol>
-<li>Install Hexo as well as the <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">server module</a> for Hexo:<br><code lang="posh" linenumbers="off">$ npm install -g hexo-cli</code><br><code lang="posh" linenumbers="off">$ npm install hexo-server –save</code></li>
+<li>Install Hexo as well as the <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">server module</a> for Hexo:<br><code lang="posh" linenumbers="off">$ npm install -g hexo-cli</code></li>
 <li>Do the Hello World thing:<br><code lang="posh" linenumbers="off">$ hexo new hello-world</code></li>
 <li>Start the Hexo server. The website will run at localhost:4000 by default:<br><code lang="posh" linenumbers="off">$ hexo server</code></li>
 <li><a href="https://hexo.io/themes/" target="_blank" rel="external">Find an existing theme</a>, and then clone your chosen theme into the themes directory. I chose the <a href="http://cgmartin.github.io/hexo-theme-bootstrap-blog/" target="_blank" rel="external">hexo-theme-bootstrap-blog</a> theme.<br><code lang="posh" linenumbers="off">$ cd themes</code><br><code lang="posh" linenumbers="off">$ git clone git@github.com:cgmartin/hexo-theme-bootstrap-blog.git</code></li>
