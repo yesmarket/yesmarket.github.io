@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: Cucumber | RTBLOGG</title>
+  <title>TFS-2015 is good, but... | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="cool">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RTBLOGG">
-<meta property="og:url" content="http://www.blog.ryanbartsch.com/tags/Cucumber/index.html">
+  <meta name="description" content="We installed TFS-2015 at my organisation a few months back and I have to say; I’m starting to really like the ALM stuff. That said, there are a few things aren’t quite up to my expectations and have c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TFS-2015 is good, but...">
+<meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description" content="cool">
+<meta property="og:description" content="We installed TFS-2015 at my organisation a few months back and I have to say; I’m starting to really like the ALM stuff. That said, there are a few things aren’t quite up to my expectations and have c">
+<meta property="og:updated_time" content="2016-04-05T04:56:06.291Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RTBLOGG">
-<meta name="twitter:description" content="cool">
+<meta name="twitter:title" content="TFS-2015 is good, but...">
+<meta name="twitter:description" content="We installed TFS-2015 at my organisation a few months back and I have to say; I’m starting to really like the ALM stuff. That said, there are a few things aren’t quite up to my expectations and have c">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -78,40 +79,106 @@
 
     <div class="row">
         <div class="col-sm-8 blog-main">
-          
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
+          <article id="post-TFS-2015-is-good-but" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
     
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/08/specflow-who-writes-the-specifications/">SpecFlow - who writes the specifications?</a>
+    <h1 class="article-title" itemprop="name">
+      TFS-2015 is good, but...
     </h1>
   
 
 
+  </header>
+
+  <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2015/08/specflow-who-writes-the-specifications/" class="archive-article-date"><time datetime="2015-08-03T01:27:41.000Z" itemprop="datePublished">August 3rd</time></a>
+  <a href="/2016/04/TFS-2015-is-good-but/" class="article-date"><time datetime="2016-04-05T04:48:23.000Z" itemprop="datePublished">2016-04-05</time></a>
 </div>
 
-  </header>
-</article>
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>We installed TFS-2015 at my organisation a few months back and I have to say; I’m starting to really like the ALM stuff. That said, there are a few things aren’t quite up to my expectations and have caused me a few frustrations.</p>
+<p>Before I get onto some of my frustrations, let me tell you about some of the good stuff.</p>
+<ul>
+<li>Team Foundation Build - It’s so easy to create build definitions using pre-defined build tasks. The first team-project took about 30mins to configure the entire process, which included restoring packages from a local nuget repo, compiling the solution, running unit tests and creating an octopus deployment package.</li>
+<li>Tools like capacity planning etc., make the whole sprint planning process really easy to manage.</li>
+<li>Building charts from work-item queries and displaying them on management dashboards is so slick and easy.</li>
+</ul>
+<p>There are obviously a lot of other cool things, but the list above are the ones that really impressed me.</p>
+<p>Ok, so now onto some of the no-so-good stuff…</p>
+<p>The first thing, which is probably the most significant is the fact that you can’t include work-items from different team-projects into a single sprint. This is a major issue for my team, as we’re moving to somewhat of a microservices architecture where individual team-projects represent a single distinct business capability. Individual projects will rarely focus on a single capability; most projects are for automating business process and touch multiple business capabilities. To solve this issue we had to implement a pretty significant work-around whereby we created a ‘virtual’ team-project as a bucket for all work-items. There were other work-arounds documented in various blogs online, but for mine this one was the least shit. Each of the various work-arounds results in a different set of issues. Some of the issues that we’ve encountered as a result of our chosen work-around include:</p>
+<ul>
+<li>We can’t include ‘code tiles’ or any other code related widgets on any of our virtual team-project dashboards as the code is under a different team-project.</li>
+<li>When checking-in code, it is possible to reference work-items from a different team-project, however it causes a few issues with the whole code review process.</li>
+</ul>
+<p>The above issue seems to be a pretty fundamental issue with TFS and a major oversight by Microsoft.</p>
+<p>Most of the other things are all pretty minor and will <em>hopefully</em> be fixed as the product matures:</p>
+<ul>
+<li>You can apply arbitrary tags to work-items, however you can’t use them as the grouping column in a chart. I would have thought this would be one of main reasons for using tags.</li>
+<li>There is no way to add calculated columns to your queries - think calculated fields in SSRS datasets.</li>
+<li>There are some very basic <a href="https://msdn.microsoft.com/en-us/library/dd286638.aspx#qvariables" target="_blank" rel="external">variables</a> that you can use in your queries e.g. @Today, however this seems to be a bit lacking. I wanted to create a query for work-items completed for the current month, but this isn’t possible.</li>
+<li>I wanted to create some more complex reports in SSRS to display on the management dashboard, but there is no out-of-the-box SSRS reporting widget.</li>
+<li>Lack of templating in TF-Build.</li>
+<li>You can’t create multiple backlog boards for an individual team-project.</li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/" data-id="cimmyb5l70001h4i5s36yq3xb" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TF-Build/">TF Build</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TFS/">TFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/automation/">automation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+
+
+    </footer>
+  </div>
 
   
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
   
-    </div></section>
   
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">Migrating team projects to different collections in TFS using git and git-tf</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
+</article>
 
 
 
@@ -200,11 +267,13 @@
 <script>
   var disqus_shortname = 'rtblogg';
   
+  var disqus_url = 'http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
