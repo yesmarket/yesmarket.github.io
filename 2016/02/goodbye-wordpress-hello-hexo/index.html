@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/index.html">
 <meta property="og:site_name" content="RTBLOGG">
 <meta property="og:description" content="About half a year ago I started this blog. I played around with a few diferent CMS platforms, but eventually settled on WordPress. At the time the main reasons I chose WordPress were because of the la">
-<meta property="og:updated_time" content="2016-03-08T12:10:01.272Z">
+<meta property="og:updated_time" content="2016-04-05T04:32:00.669Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Goodbye WordPress hello Hexo">
 <meta name="twitter:description" content="About half a year ago I started this blog. I played around with a few diferent CMS platforms, but eventually settled on WordPress. At the time the main reasons I chose WordPress were because of the la">
@@ -27,7 +27,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="/css/styles.css" type="text/css">
+  <link rel="stylesheet" href="/css/styles.css">
   
 
 </head>
@@ -71,16 +71,12 @@
 
   <div class="container">
     <div class="blog-header">
-	<div class="blog-header-gravitar">
-		<img src="http://www.gravatar.com/avatar/7542fb592bae242786954db50221eea1" />
-	</div>
-	<div class="blog-header-title">
-		<h1 class="blog-title">RTBLOGG</h1>
-		
-			<p class="lead blog-description">All the things</p>
-		
-	</div>
+  <h1 class="blog-title">RTBLOGG</h1>
+  
+    <p class="lead blog-description">All the things</p>
+  
 </div>
+
     <div class="row">
         <div class="col-sm-8 blog-main">
           <article id="post-goodbye-wordpress-hello-hexo" class="article article-type-post" itemscope itemprop="blogPost">
@@ -123,7 +119,7 @@
 <p>From this list of criterias, I came up with <a href="http://www.staticgen.com/octopress" target="_blank" rel="external">Octopress</a> and <a href="http://www.staticgen.com/hexo" target="_blank" rel="external">Hexo</a>. I gave both a quick trial run, but eventually chose Hexo because of how easy it was to use as well as the fact I found a really simple bootstrap theme that I liked.</p>
 <p>I probably took me about an hour all up to port my WordPress blog to Hexo and to get it up and running. To show how easy it was, here are the steps that I took:</p>
 <ol>
-<li>Install Hexo as well as the <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">server module</a> for Hexo:<br><code lang="posh" linenumbers="off">$ npm install -g hexo-cli</code></li>
+<li>Install Hexo as well as the <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">server module</a> for Hexo:<br><code lang="posh" linenumbers="off">$ npm install -g hexo-cli</code><br><code lang="posh" linenumbers="off">$ npm install hexo-server –save</code></li>
 <li>Do the Hello World thing:<br><code lang="posh" linenumbers="off">$ hexo new hello-world</code></li>
 <li>Start the Hexo server. The website will run at localhost:4000 by default:<br><code lang="posh" linenumbers="off">$ hexo server</code></li>
 <li><a href="https://hexo.io/themes/" target="_blank" rel="external">Find an existing theme</a>, and then clone your chosen theme into the themes directory. I chose the <a href="http://cgmartin.github.io/hexo-theme-bootstrap-blog/" target="_blank" rel="external">hexo-theme-bootstrap-blog</a> theme.<br><code lang="posh" linenumbers="off">$ cd themes</code><br><code lang="posh" linenumbers="off">$ git clone git@github.com:cgmartin/hexo-theme-bootstrap-blog.git</code></li>
@@ -149,7 +145,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cilhwbzdh000r0ovtwbqcvsol" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cimmxvko00004hgi5ujeoxhae" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -301,11 +297,11 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
 
-<script src="/js/script.js" type="text/javascript"></script>
+<script src="/js/script.js"></script>
 
 </body>
 </html>

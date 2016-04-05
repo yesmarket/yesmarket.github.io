@@ -11,7 +11,7 @@
 <meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/index.html">
 <meta property="og:site_name" content="RTBLOGG">
 <meta property="og:description" content="When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and git-tf as the integ">
-<meta property="og:updated_time" content="2016-03-08T12:09:27.750Z">
+<meta property="og:updated_time" content="2016-04-05T04:32:00.670Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Migrating team projects to different collections in TFS using git and git-tf">
 <meta name="twitter:description" content="When I changed jobs about a year ago, I went from using git at my previous workplace, back to TFS. About 6 months in I decided to start using git locally with TFS as the remote and git-tf as the integ">
@@ -27,7 +27,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="/css/styles.css" type="text/css">
+  <link rel="stylesheet" href="/css/styles.css">
   
 
 </head>
@@ -71,16 +71,12 @@
 
   <div class="container">
     <div class="blog-header">
-	<div class="blog-header-gravitar">
-		<img src="http://www.gravatar.com/avatar/7542fb592bae242786954db50221eea1" />
-	</div>
-	<div class="blog-header-title">
-		<h1 class="blog-title">RTBLOGG</h1>
-		
-			<p class="lead blog-description">All the things</p>
-		
-	</div>
+  <h1 class="blog-title">RTBLOGG</h1>
+  
+    <p class="lead blog-description">All the things</p>
+  
 </div>
+
     <div class="row">
         <div class="col-sm-8 blog-main">
           <article id="post-migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf" class="article article-type-post" itemscope itemprop="blogPost">
@@ -121,7 +117,7 @@
 <li>checking everything in using git-tf</li>
 <li>setting up long running branches and folder structure for gitflow using native TFS commands and git-tf</li>
 </ul>
-<p>I scripted everything into a PowerShell module called <a href="https://github.com/yesmarket/TfsMigrationExtensions" target="_blank" rel="external">TfsMigrationExtensions</a>, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
+<p>I scripted everything into a PowerShell module called TfsMigrationExtensions, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
 <pre><code>$ Initialize-TeamProject -collection $destinationcollection -teamprojectname $destinationname -workspace $workspacename
 $ Copy-TeamProject -sourcecollection $sourcecollection -sourcename $sourcename -sourcebranch $sourcebranch -destinationcollection $destinationcollection -destinationname $destinationname -usermappath $usermappath
 $ Set-GitFlow -collection $destinationcollection -teamprojectname $destinationname
@@ -152,7 +148,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cilhwbzd2000k0ovtdyq6y3gz" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cimmxvknt0001hgi58f2edbal" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -297,11 +293,11 @@ $ git merge $source
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
 
-<script src="/js/script.js" type="text/javascript"></script>
+<script src="/js/script.js"></script>
 
 </body>
 </html>

@@ -26,7 +26,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="/css/styles.css" type="text/css">
+  <link rel="stylesheet" href="/css/styles.css">
   
 
 </head>
@@ -70,16 +70,12 @@
 
   <div class="container">
     <div class="blog-header">
-	<div class="blog-header-gravitar">
-		<img src="http://www.gravatar.com/avatar/7542fb592bae242786954db50221eea1" />
-	</div>
-	<div class="blog-header-title">
-		<h1 class="blog-title">RTBLOGG</h1>
-		
-			<p class="lead blog-description">All the things</p>
-		
-	</div>
+  <h1 class="blog-title">RTBLOGG</h1>
+  
+    <p class="lead blog-description">All the things</p>
+  
 </div>
+
     <div class="row">
         <div class="col-sm-8 blog-main">
           
@@ -122,7 +118,7 @@
 <li>checking everything in using git-tf</li>
 <li>setting up long running branches and folder structure for gitflow using native TFS commands and git-tf</li>
 </ul>
-<p>I scripted everything into a PowerShell module called <a href="https://github.com/yesmarket/TfsMigrationExtensions" target="_blank" rel="external">TfsMigrationExtensions</a>, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
+<p>I scripted everything into a PowerShell module called TfsMigrationExtensions, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
 <pre><code>$ Initialize-TeamProject -collection $destinationcollection -teamprojectname $destinationname -workspace $workspacename
 $ Copy-TeamProject -sourcecollection $sourcecollection -sourcename $sourcename -sourcebranch $sourcebranch -destinationcollection $destinationcollection -destinationname $destinationname -usermappath $usermappath
 $ Set-GitFlow -collection $destinationcollection -teamprojectname $destinationname
@@ -153,7 +149,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cilhwbzd2000k0ovtdyq6y3gz" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cimmxvknt0001hgi58f2edbal" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -216,7 +212,7 @@ $ git merge $source
 <p>From this list of criterias, I came up with <a href="http://www.staticgen.com/octopress" target="_blank" rel="external">Octopress</a> and <a href="http://www.staticgen.com/hexo" target="_blank" rel="external">Hexo</a>. I gave both a quick trial run, but eventually chose Hexo because of how easy it was to use as well as the fact I found a really simple bootstrap theme that I liked.</p>
 <p>I probably took me about an hour all up to port my WordPress blog to Hexo and to get it up and running. To show how easy it was, here are the steps that I took:</p>
 <ol>
-<li>Install Hexo as well as the <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">server module</a> for Hexo:<br><code lang="posh" linenumbers="off">$ npm install -g hexo-cli</code></li>
+<li>Install Hexo as well as the <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">server module</a> for Hexo:<br><code lang="posh" linenumbers="off">$ npm install -g hexo-cli</code><br><code lang="posh" linenumbers="off">$ npm install hexo-server –save</code></li>
 <li>Do the Hello World thing:<br><code lang="posh" linenumbers="off">$ hexo new hello-world</code></li>
 <li>Start the Hexo server. The website will run at localhost:4000 by default:<br><code lang="posh" linenumbers="off">$ hexo server</code></li>
 <li><a href="https://hexo.io/themes/" target="_blank" rel="external">Find an existing theme</a>, and then clone your chosen theme into the themes directory. I chose the <a href="http://cgmartin.github.io/hexo-theme-bootstrap-blog/" target="_blank" rel="external">hexo-theme-bootstrap-blog</a> theme.<br><code lang="posh" linenumbers="off">$ cd themes</code><br><code lang="posh" linenumbers="off">$ git clone git@github.com:cgmartin/hexo-theme-bootstrap-blog.git</code></li>
@@ -242,7 +238,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cilhwbzdh000r0ovtwbqcvsol" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cimmxvko00004hgi5ujeoxhae" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -356,7 +352,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cilhwbzd2000f0ovtejss96fb" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cimmxvko20006hgi5gl1ja0ff" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -418,7 +414,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/08/specflow-who-writes-the-specifications/" data-id="cilhwbzd200050ovt0xky9pyr" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/08/specflow-who-writes-the-specifications/" data-id="cimmxvko40007hgi5e1ws3crd" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -480,7 +476,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cilhwbzcm00000ovtyq7b2r6y" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cimmxvknn0000hgi5t2f3sh5v" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -540,7 +536,7 @@ public void WhenWePressTheButton()
 <p>If you were notified of an error, you might be able to easily find the error message, but without contextual logging the prior logs leading up to the error (e.g. a log of the request object or the queued message) would be very hard to reconcile. What you need is some kind of identifier (e.g. such as a GUID) associated to the call context, which you can subsequently filter on. This would then allow you to get a sequence of log messages up to and including the error from the same logical thread context.  </p>
 <p>log4net allows you to add contextual properties to a thread properties map using the static <code>LogicalThreadContext.Properties</code> instance. The only problem with this is that it’s static and not very conducive for testing - more on this later. For now, we can add context as follows:</p>
 <p>This context can now be included in log messages by including <code>%property{context}</code> in the layout as shown below:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">appender</span> <span class="attribute">name</span>=<span class="value">"TraceAppender"</span> <span class="attribute">type</span>=<span class="value">"log4net.Appender.TraceAppender"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">layout</span> <span class="attribute">type</span>=<span class="value">"log4net.Layout.PatternLayout"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">conversionPattern</span> <span class="attribute">value</span>=<span class="value">"%d %-5p %property&#123;context&#125; %c - %m%n"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">layout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">appender</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"TraceAppender"</span> <span class="attr">type</span>=<span class="string">"log4net.Appender.TraceAppender"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">conversionPattern</span> <span class="attr">value</span>=<span class="string">"%d %-5p %property&#123;context&#125; %c - %m%n"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>If we were logging to a database, we could include the context as one of the columns.</p>
 <p><img src="/images/log4net-context-logged-too-database-example.png" alt="log4net-context-logged-too-database-example"></p>
 <p>This is especially useful when debugging, as you can locate the error log and then filter on the context of that error to get a full log trace.</p>
@@ -558,7 +554,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/" data-id="cilhwbzdx00110ovtowsobypr" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/" data-id="cimmxvknz0003hgi5q9olhe9s" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -684,11 +680,11 @@ public void WhenWePressTheButton()
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
 
-<script src="/js/script.js" type="text/javascript"></script>
+<script src="/js/script.js"></script>
 
 </body>
 </html>
