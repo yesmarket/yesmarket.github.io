@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Query-by-specification part 1 | RTBLOGG</title>
+  <title>Query-by-specification part 1 - the problem with repositories | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Instead of writing one massive blog entry, I’ve decided to write this as a series of smaller entries as it’s currently 11:33 PM on a Tuesday night and I don’t really want to be up until 4 AM.
 Anyways,">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Query-by-specification part 1">
+<meta property="og:title" content="Query-by-specification part 1 - the problem with repositories">
 <meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/index.html">
 <meta property="og:site_name" content="RTBLOGG">
 <meta property="og:description" content="Instead of writing one massive blog entry, I’ve decided to write this as a series of smaller entries as it’s currently 11:33 PM on a Tuesday night and I don’t really want to be up until 4 AM.
 Anyways,">
-<meta property="og:updated_time" content="2016-04-19T12:46:49.335Z">
+<meta property="og:updated_time" content="2016-04-19T23:30:50.242Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Query-by-specification part 1">
+<meta name="twitter:title" content="Query-by-specification part 1 - the problem with repositories">
 <meta name="twitter:description" content="Instead of writing one massive blog entry, I’ve decided to write this as a series of smaller entries as it’s currently 11:33 PM on a Tuesday night and I don’t really want to be up until 4 AM.
 Anyways,">
   
@@ -92,7 +92,7 @@ Anyways,">
     
   
     <h1 class="article-title" itemprop="name">
-      Query-by-specification part 1
+      Query-by-specification part 1 - the problem with repositories
     </h1>
   
 
@@ -128,7 +128,7 @@ Anyways,">
 </ul>
 <p>SRP and OCP are part of the <a href="https://www.pluralsight.com/courses/principles-oo-design" target="_blank" rel="external">SOLID</a> principles.</p>
 <p>Taking everything above into account, it’s still important to remain pragmatic – the repository pattern is a good de-facto approach for most data access layers. Only when there is a high level of uncertainty, change and complexity should we look for alternatives.</p>
-<p>Let us explore this a little bit deeper with an example. I’m currently working for ‘a bank’ and there is the concept of ‘loans’. The loans data model isn’t overly complex, but evidently there are many ways of querying for loans. As a relatively core concept for a banking institution, it could be anticipated with a fairly high level of certainty that as time goes on there will be requirements coming in to query this data model with many different criteria. This is a situation where the repository pattern alone might not be the ideal solution.</p>
+<p>Let us explore this a little bit deeper with an example. I’m currently working for ‘a bank’ and there is the concept of ‘loans’. The loans data model isn’t overly complex, but evidently there are many ways of querying for loans. In the last few months alone, I’ve had to update the repository with several new query operations - a clear violation of OCP. In regards to refactoring for OCP, my usual approach is to follow the ‘fool me once shame on you, fool me twice shame on me’ proverb. Basically what this means is that I don’t initially build software conforming to OCP as it’s something that usually incurrs a bit of a cost in terms of time and complexity - in a word it’s YAGNI. If when I do need to change a class, the first time is ‘shame on you’. If I need to change that same class a second time; ‘shame on me’ (and time to refactor for OCP). Anyway, back to my scenario…</p>
 <p>If we go the vanilla repository pattern route we might have an initial loan repository abstraction as follows (obviously this is based on the initial requirements of the system):</p>
 <pre><code class="language-cs">public interface ILoanRepository
 {
@@ -168,7 +168,7 @@ Anyways,">
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/" data-id="cin7kzukj000arwcieehf6p4u" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/" data-id="cin82f53c000ahgi548oz9hpd" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -271,7 +271,7 @@ Anyways,">
         </li>
       
         <li>
-          <a href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1</a>
+          <a href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1 - the problem with repositories</a>
         </li>
       
         <li>

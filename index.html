@@ -132,7 +132,7 @@ upsub = !git submodule update --init --recursive --remote &amp;&amp; git submodu
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/git-submodules-detached-HEAD/" data-id="cin7kzukd0006rwci410uibg9" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/git-submodules-detached-HEAD/" data-id="cin82f5350006hgi5w1zcb09f" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -214,7 +214,7 @@ dnx run
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/5-minute-hw-dotnet-on-ubuntu/" data-id="cin7kzuk10000rwcif4000npz" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/5-minute-hw-dotnet-on-ubuntu/" data-id="cin82f52q0000hgi5y5fksjbp" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -243,7 +243,7 @@ dnx run
     
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1</a>
+      <a class="article-title" href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1 - the problem with repositories</a>
     </h1>
   
 
@@ -279,7 +279,7 @@ dnx run
 </ul>
 <p>SRP and OCP are part of the <a href="https://www.pluralsight.com/courses/principles-oo-design" target="_blank" rel="external">SOLID</a> principles.</p>
 <p>Taking everything above into account, it’s still important to remain pragmatic – the repository pattern is a good de-facto approach for most data access layers. Only when there is a high level of uncertainty, change and complexity should we look for alternatives.</p>
-<p>Let us explore this a little bit deeper with an example. I’m currently working for ‘a bank’ and there is the concept of ‘loans’. The loans data model isn’t overly complex, but evidently there are many ways of querying for loans. As a relatively core concept for a banking institution, it could be anticipated with a fairly high level of certainty that as time goes on there will be requirements coming in to query this data model with many different criteria. This is a situation where the repository pattern alone might not be the ideal solution.</p>
+<p>Let us explore this a little bit deeper with an example. I’m currently working for ‘a bank’ and there is the concept of ‘loans’. The loans data model isn’t overly complex, but evidently there are many ways of querying for loans. In the last few months alone, I’ve had to update the repository with several new query operations - a clear violation of OCP. In regards to refactoring for OCP, my usual approach is to follow the ‘fool me once shame on you, fool me twice shame on me’ proverb. Basically what this means is that I don’t initially build software conforming to OCP as it’s something that usually incurrs a bit of a cost in terms of time and complexity - in a word it’s YAGNI. If when I do need to change a class, the first time is ‘shame on you’. If I need to change that same class a second time; ‘shame on me’ (and time to refactor for OCP). Anyway, back to my scenario…</p>
 <p>If we go the vanilla repository pattern route we might have an initial loan repository abstraction as follows (obviously this is based on the initial requirements of the system):</p>
 <pre><code class="language-cs">public interface ILoanRepository
 {
@@ -319,7 +319,7 @@ dnx run
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/" data-id="cin7kzukj000arwcieehf6p4u" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/" data-id="cin82f53c000ahgi548oz9hpd" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -388,7 +388,7 @@ dnx run
 <li>You can apply arbitrary tags to work-items, however you can’t use them as the grouping column in a chart. I would have thought this would be one of main reasons for using tags.</li>
 <li>There is no way to add calculated columns to your queries - think calculated fields in SSRS datasets.</li>
 <li>There are some very basic <a href="https://msdn.microsoft.com/en-us/library/dd286638.aspx#qvariables" target="_blank" rel="external">variables</a> that you can use in your queries e.g. @Today, however this seems to be a bit lacking. I wanted to create a query for work-items completed for the current month, but this isn’t possible.</li>
-<li>I wanted to create some more complex reports in SSRS to display on the management dashboard, but there is no out-of-the-box SSRS reporting widget.</li>
+<li>I wanted to create some more complex reports in SSRS to display on the management dashboard, but there is no out-of-the-box SSRS reporting widget. I also tried creating a custom widget that displayed a configurable URL in an iframe with the URL being set to the path of my SSRS report. I thought I was pretty clever, that is, until I realised that customised widgets were only available in <a href="https://www.visualstudio.com/en-us/products/visual-studio-team-services-vs.aspx" target="_blank" rel="external">VSTS</a> - fail.</li>
 <li>Lack of templating in TF-Build.</li>
 <li>You can’t create multiple backlog boards for an individual team-project.</li>
 </ul>
@@ -402,7 +402,7 @@ dnx run
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/" data-id="cin7kzukb0003rwciw0grzl0e" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/" data-id="cin82f5320003hgi5ay38ozi9" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -463,7 +463,7 @@ dnx run
 <li>checking everything in using git-tf</li>
 <li>setting up long running branches and folder structure for gitflow using native TFS commands and git-tf</li>
 </ul>
-<p>I scripted everything into a PowerShell module called TfsMigrationExtensions, which is on GitHub. I used commands from this module as follows on a per team-project basis:</p>
+<p>I scripted everything into a PowerShell module called <a href="https://github.com/yesmarket/TfsMigrationExtensions" target="_blank" rel="external">TfsMigrationExtensions</a>. I used commands from this module as follows on a per team-project basis:</p>
 <pre><code>$ Initialize-TeamProject -collection $destinationcollection -teamprojectname $destinationname -workspace $workspacename
 $ Copy-TeamProject -sourcecollection $sourcecollection -sourcename $sourcename -sourcebranch $sourcebranch -destinationcollection $destinationcollection -destinationname $destinationname -usermappath $usermappath
 $ Set-GitFlow -collection $destinationcollection -teamprojectname $destinationname
@@ -494,7 +494,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cin7kzukg0008rwci2osjj6lr" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cin82f53a0008hgi5n1fvaj3o" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -583,7 +583,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cin7kzukf0007rwcibmi8f3a4" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cin82f5380007hgi50o9bdjoi" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -697,7 +697,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cin7kzukn000brwcilkdltua1" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cin82f53j000bhgi5rej3i9wt" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -759,7 +759,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/08/specflow-who-writes-the-specifications/" data-id="cin7kzukq000drwcidft8urwd" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/08/specflow-who-writes-the-specifications/" data-id="cin82f53o000dhgi5ud9roguw" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -821,7 +821,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cin7kzuk60001rwciz9h5ss0o" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cin82f52w0001hgi59de7yz71" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -899,7 +899,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/" data-id="cin7kzukc0004rwcipfx1jjsj" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/" data-id="cin82f5330004hgi50b1rpejs" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -978,7 +978,7 @@ public void WhenWePressTheButton()
         </li>
       
         <li>
-          <a href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1</a>
+          <a href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1 - the problem with repositories</a>
         </li>
       
         <li>
