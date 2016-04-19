@@ -84,6 +84,88 @@
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-5-minute-hw-dotnet-on-ubuntu" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/5-minute-hw-dotnet-on-ubuntu/">5 minute hw dotnet app on ubuntu</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/04/5-minute-hw-dotnet-on-ubuntu/" class="article-date"><time datetime="2016-04-19T13:01:01.000Z" itemprop="datePublished">2016-04-19</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Ok so 5 minutes might be a tad optimistic… when I say 5 minutes, I acutally mean 5 minutes from when you’ve got all the required apt and npm packages installed.</p>
+<p>I’m using an Ubuntu 14.04 LTS VM for this walkthrough. No guarantees it’ll work for other distributions/versions, but only one way to find out…</p>
+<p>Anyways, first thing to do is install ASP.NET 5 (soon to be renamed to ASP.NET Core 1.0). If you run into any trouble following my instructions; use the <a href="http://docs.asp.net/en/latest/getting-started/installing-on-linux.html" target="_blank" rel="external">gettting start guide</a> as a reference.</p>
+<p>Basically we first need to install the dotnet version manager (DNVM) so that we can then install the appropriate .NET execution environment (DNX). For our purposes we want the DNX for .NET core.</p>
+<p>Download and install DNVM:</p>
+<pre><code>curl -sSL https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.sh | DNX_BRANCH=dev sh &amp;&amp; source ~/.dnx/dnvm/dnvm.sh
+</code></pre><p>Once you’ve installed DNVM run <code lang="sh" linenumbers="off">dnvm</code> to display it in the console:<br><img src="/images/dnvm.png" alt=""></p>
+<p>Next install all the DNX prerequisites:</p>
+<pre><code>sudo apt-get install libunwind8 gettext libssl-dev libcurl4-openssl-dev zlib1g libicu-dev uuid-dev
+</code></pre><p>Use DNVM to install DNX for .NET Core:</p>
+<pre><code>dnvm install -r coreclr -arch x64 latest
+</code></pre><p>Note; omitting the -arch will install the 32-bit version of .NET Core. If you want the 64-bit version, you must specify processor architecture.</p>
+<p>Once you’ve done all this run <code lang="sh" linenumbers="off">dnvm list</code> to list all the DNX versions you’ve got installed on your machine. If you’ve got more than one, you can run <code lang="sh" linenumbers="off">dnvm use</code> to switch between different versions.</p>
+<p>Now that we’ve got the DNVM and DNX for .NET Core installed we’re ready to create a cross-platform Hello-World console app.</p>
+<p>I’m going to use my good ol’ friend the <a href="http://yeoman.io" target="_blank" rel="external">yeoman</a> to scaffold a .net core 1.0 console app, but for a more comprehensive walkthrough refer to <a href="http://docs.asp.net/en/latest/dnx/console.html" target="_blank" rel="external">Creating a Cross-Platform Console App with DNX</a> from the docs.</p>
+<p>Run the following commands to first install the <a href="https://github.com/OmniSharp/generator-aspnet" target="_blank" rel="external">aspnet generator</a>, then create the HelloWorld .net core 1.0 console app:</p>
+<pre><code>sudo npm i -g generator-aspnet
+yo aspnet console HelloWorld
+</code></pre><p>Once you install the aspnet generator, the yeoman comes along to say hello:<br><img src="/images/yo.png" alt=""></p>
+<p>From here we run <code lang="sh" linenumbers="off">dnu restore</code> to download all the dependencies listed in the project.json file, which adds them to your app’s packages directory. And finally we can run <code lang="sh" linenumbers="off">dnx run</code> to execute our .net code on linux:</p>
+<pre><code>dnu restore
+dnx run
+</code></pre><div style="float:left;"><br>    … and badda bing badda boom<br>    <img src="/images/hello-world-output.png" alt=""><br></div>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/5-minute-hw-dotnet-on-ubuntu/" data-id="cin7inyht0001fscij2elgldh" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://www.blog.ryanbartsch.com/2016/04/5-minute-hw-dotnet-on-ubuntu/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/net-core-1-0/">.net core 1.0</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ubuntu/">ubuntu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yeoman/">yeoman</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  
+  
+</article>
+
+
+
+  
     <article id="post-query-by-specification-part-1" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -166,7 +248,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/" data-id="cimnbun9y0004pkcirf5sdqcr" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/" data-id="cin7inyi30008fsci7yz18hej" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -249,7 +331,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/" data-id="cimnbun9o0001pkcivawd95xi" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/" data-id="cin7inyho0000fscig8v8oavx" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -341,7 +423,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cimnbun9x0003pkciwbc0inu2" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cin7inyi10007fscidcyk3n7f" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -430,7 +512,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cimnbun9f0000pkcive946279" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cin7inyi00006fscil1og0rca" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -544,7 +626,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cimnbun9z0006pkciq2rw79li" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cin7inyi6000afscibvtx0g5b" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -606,7 +688,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/08/specflow-who-writes-the-specifications/" data-id="cimnbuna10007pkciflk48y3c" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/08/specflow-who-writes-the-specifications/" data-id="cin7inyia000bfscil2r1ni2u" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -668,7 +750,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cimnbunaw001xpkcij6kp9dre" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" data-id="cin7inyhy0003fsci63fzqtno" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -746,7 +828,7 @@ public void WhenWePressTheButton()
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/" data-id="cimnbuna30008pkcixl467ilw" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/" data-id="cin7inyhz0004fsci8fpsfp2i" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -789,7 +871,7 @@ public void WhenWePressTheButton()
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Entity-Framework/">Entity Framework</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub/">GitHub</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Hexo/">Hexo</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/PowerShell/">PowerShell</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Query-by-specification/">Query-by-specification</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SOLID/">SOLID</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TF-Build/">TF Build</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TFS/">TFS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/WordPress/">WordPress</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/automation/">automation</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/design-patterns/">design patterns</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/">git</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git-tf/">git-tf</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/staticgen/">staticgen</a><span class="sidebar-module-list-count">1</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">4</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/net-core-1-0/">.net core 1.0</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Entity-Framework/">Entity Framework</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub/">GitHub</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Hexo/">Hexo</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/PowerShell/">PowerShell</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Query-by-specification/">Query-by-specification</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SOLID/">SOLID</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TF-Build/">TF Build</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TFS/">TFS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/WordPress/">WordPress</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/automation/">automation</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/design-patterns/">design patterns</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">6</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/">git</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git-tf/">git-tf</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/staticgen/">staticgen</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/ubuntu/">ubuntu</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/yeoman/">yeoman</a><span class="sidebar-module-list-count">1</span></li></ul>
   </div>
 
 
@@ -798,7 +880,7 @@ public void WhenWePressTheButton()
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/AWS/" style="font-size: 13.33px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/Entity-Framework/" style="font-size: 10px;">Entity Framework</a> <a href="/tags/GitHub/" style="font-size: 13.33px;">GitHub</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/PowerShell/" style="font-size: 10px;">PowerShell</a> <a href="/tags/Query-by-specification/" style="font-size: 10px;">Query-by-specification</a> <a href="/tags/SOLID/" style="font-size: 10px;">SOLID</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/TF-Build/" style="font-size: 10px;">TF Build</a> <a href="/tags/TFS/" style="font-size: 13.33px;">TFS</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/automation/" style="font-size: 10px;">automation</a> <a href="/tags/design-patterns/" style="font-size: 10px;">design patterns</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/git-tf/" style="font-size: 10px;">git-tf</a> <a href="/tags/staticgen/" style="font-size: 10px;">staticgen</a>
+      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/net-core-1-0/" style="font-size: 10px;">.net core 1.0</a> <a href="/tags/AWS/" style="font-size: 13.33px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/Entity-Framework/" style="font-size: 10px;">Entity Framework</a> <a href="/tags/GitHub/" style="font-size: 13.33px;">GitHub</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/PowerShell/" style="font-size: 10px;">PowerShell</a> <a href="/tags/Query-by-specification/" style="font-size: 10px;">Query-by-specification</a> <a href="/tags/SOLID/" style="font-size: 10px;">SOLID</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/TF-Build/" style="font-size: 10px;">TF Build</a> <a href="/tags/TFS/" style="font-size: 13.33px;">TFS</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/automation/" style="font-size: 10px;">automation</a> <a href="/tags/design-patterns/" style="font-size: 10px;">design patterns</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/git-tf/" style="font-size: 10px;">git-tf</a> <a href="/tags/staticgen/" style="font-size: 10px;">staticgen</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/yeoman/" style="font-size: 10px;">yeoman</a>
     </p>
   </div>
 
@@ -806,7 +888,7 @@ public void WhenWePressTheButton()
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/02/">February 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">3</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/02/">February 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -815,6 +897,10 @@ public void WhenWePressTheButton()
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2016/04/5-minute-hw-dotnet-on-ubuntu/">5 minute hw dotnet app on ubuntu</a>
+        </li>
       
         <li>
           <a href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1</a>
@@ -830,10 +916,6 @@ public void WhenWePressTheButton()
       
         <li>
           <a href="/2016/02/goodbye-wordpress-hello-hexo/">Goodbye WordPress hello Hexo</a>
-        </li>
-      
-        <li>
-          <a href="/2015/08/scoped-bindings-in-specflow/">Scoped Bindings in SpecFlow</a>
         </li>
       
     </ul>
