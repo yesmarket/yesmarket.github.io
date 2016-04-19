@@ -3,17 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: ubuntu | RTBLOGG</title>
+  <title>git submodules detached HEAD | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="cool">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RTBLOGG">
-<meta property="og:url" content="http://www.blog.ryanbartsch.com/tags/ubuntu/index.html">
+  <meta name="description" content="For my hexo blog, I’ve got 2 git repositories; one for the static site generator, which hosts the actual blogs, the bootstrap theme etc., and a second one for the generated content. The latter is set">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git submodules detached HEAD">
+<meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/04/git-submodules-detached-HEAD/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description" content="cool">
+<meta property="og:description" content="For my hexo blog, I’ve got 2 git repositories; one for the static site generator, which hosts the actual blogs, the bootstrap theme etc., and a second one for the generated content. The latter is set">
+<meta property="og:image" content="http://www.blog.ryanbartsch.com/images/detached-head.jpg">
+<meta property="og:updated_time" content="2016-04-19T15:30:40.751Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RTBLOGG">
-<meta name="twitter:description" content="cool">
+<meta name="twitter:title" content="git submodules detached HEAD">
+<meta name="twitter:description" content="For my hexo blog, I’ve got 2 git repositories; one for the static site generator, which hosts the actual blogs, the bootstrap theme etc., and a second one for the generated content. The latter is set">
+<meta name="twitter:image" content="http://www.blog.ryanbartsch.com/images/detached-head.jpg">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -82,40 +85,94 @@
 </div>
     <div class="row">
         <div class="col-sm-8 blog-main">
-          
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
+          <article id="post-git-submodules-detached-HEAD" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
     
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/04/5-minute-hw-dotnet-on-ubuntu/">5 minute hw dotnet app on ubuntu</a>
+    <h1 class="article-title" itemprop="name">
+      git submodules detached HEAD
     </h1>
   
 
 
+  </header>
+
+  <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2016/04/5-minute-hw-dotnet-on-ubuntu/" class="archive-article-date"><time datetime="2016-04-19T13:01:01.000Z" itemprop="datePublished">April 19th</time></a>
+  <a href="/2016/04/git-submodules-detached-HEAD/" class="article-date"><time datetime="2016-04-19T15:21:08.000Z" itemprop="datePublished">2016-04-20</time></a>
 </div>
 
-  </header>
-</article>
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>For my hexo blog, I’ve got 2 git repositories; one for the static site generator, which hosts the actual blogs, the bootstrap theme etc., and a second one for the generated content. The latter is set up as a <a href="https://pages.github.com" target="_blank" rel="external">GitHub-pages</a> site hosted directly from my repo - all I need to do is <code lang="sh" linenumbers="off">git push</code> and my changes are live - it’s awesome, but I digress.</p>
+<p>Up until recently, I’ve been maintaining 2 completely seperate git repositories. I got the idea of making the generated content a submodule of the static site generator after reading about submodules in <a href="http://labs.kernelconcepts.de/downloads/books/Pro%20Git%20-%20Scott%20Chacon.pdf" target="_blank" rel="external">ProGit</a>. The book gives a few examples of where submodules might come in handy such as when you’re creating an application using a framwork that you’re customising at the same time you’re building the application.</p>
+<p>An important thing to note when dealing with submodules is that basically they’re just a pointer to a particular commit of the submodule’s repository; they don’t (by default) deal with branches. This caused me quite a few headaches, no pun intended, whereby the submodule was always in a detached HEAD state after running <code lang="sh" linenumbers="off">git submodule update –remote</code>. I tried to solve this issue by manually editing the .gitmodules file and setting up my submodule to track the master branch:</p>
+<pre><code>[submodule &quot;public&quot;]
+    path = public
+    url = git@github.com:yesmarket/yesmarket.github.io.git
+    branch = master
+</code></pre><p>However, this didn’t work, that is, without a little help. I found a git command to recursively loop through each of the submodules in the repo, checking out the branch specified in the .gitmodules file. To make things as simple as possible I ‘aliasised’ some commands in my global git config;</p>
+<pre><code>submodule-trackbranch = &quot;!git submodule foreach -q --recursive &apos;branch=\&quot;$(git config -f $toplevel/.gitmodules submodule.$name.branch)\&quot;; git checkout $branch&apos;&quot;
+upsub = !git submodule update --init --recursive --remote &amp;&amp; git submodule-trackbranch
+</code></pre><p>Now when I clone a repo with a submodule, I can then run <code lang="sh" linenumbers="off">git upsub</code> to update the submodule(s) to match what the superproject expects and then checkout the correct branch as specified in the .gitmodules file. This means I don’t end up with a detached HEAD.</p>
+<div style="float:left;"><br>    <img src="/images/detached-head.jpg" alt=""><br></div>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/git-submodules-detached-HEAD/" data-id="cin7kzukd0006rwci410uibg9" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://www.blog.ryanbartsch.com/2016/04/git-submodules-detached-HEAD/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub-pages/">GitHub-pages</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li></ul>
+
+
+    </footer>
+  </div>
 
   
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
   
-    </div></section>
   
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2016/04/5-minute-hw-dotnet-on-ubuntu/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">5 minute hw dotnet app on ubuntu</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
+</article>
 
 
 
@@ -204,11 +261,13 @@
 <script>
   var disqus_shortname = 'rtblogg';
   
+  var disqus_url = 'http://www.blog.ryanbartsch.com/2016/04/git-submodules-detached-HEAD/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
