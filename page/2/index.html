@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives | RTBLOGG</title>
+  <title>RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="cool">
 <meta property="og:type" content="website">
 <meta property="og:title" content="RTBLOGG">
-<meta property="og:url" content="http://www.blog.ryanbartsch.com/archives/index.html">
+<meta property="og:url" content="http://www.blog.ryanbartsch.com/page/2/index.html">
 <meta property="og:site_name" content="RTBLOGG">
 <meta property="og:description" content="cool">
 <meta name="twitter:card" content="summary">
@@ -52,7 +52,7 @@
           <li><a class=""
                  href="/index.html">Home</a></li>
         
-          <li><a class="active"
+          <li><a class=""
                  href="/archives/">Archives</a></li>
         
       </ul>
@@ -84,232 +84,88 @@
         <div class="col-sm-8 blog-main">
           
   
-  
+    <article id="post-contextual-logging-with-log4net" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
     
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/07/contextual-logging-with-log4net/">contextual logging with log4net</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2015/07/contextual-logging-with-log4net/" class="article-date"><time datetime="2015-07-08T03:36:34.000Z" itemprop="datePublished">2015-07-08</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>If you’re using a logging framework like <a href="https://logging.apache.org/log4net/" target="_blank" rel="external">log4net</a> or <a href="http://nlog-project.org/" target="_blank" rel="external">nlog</a> and you’ve got multiple log messages being written concurrently from different objects in the call stack, you should consider contextual logging.</p>
+<p>One of the main benefits is that it allows you to associate and filter log messages based on a particular context. This definition is a little abstract - its probably one of those times where its easier to explain the consequences of not doing this, as opposed to the benefits of doing so… If you don’t have contextual logging and you’ve got concurrent messages being logged, often from multiple applications and/or servers, to some centralised log store (e.g. a database table, or something like <a href="https://www.graylog.org/" target="_blank" rel="external">graylog</a>); depending on the number of log messages coming in, it could be extremely difficult to correlate log messages to a particular call context.</p>
+<p>Consider the following scenarios:</p>
+<ul>
+<li>A WCF service operation that gets invoked roughly 10 times per second and writes log messages from multiple different objects in the call stack.</li>
+<li>A multi-threaded message queue consumer application running on multiple server instances where the consumer writes log messages at various levels in the call graph.</li>
+</ul>
+<p>Now consider all the above scenarios getting logged to the same centralised logging repository!</p>
+<p>If you were notified of an error, you might be able to easily find the error message, but without contextual logging the prior logs leading up to the error (e.g. a log of the request object or the queued message) would be very hard to reconcile. What you need is some kind of identifier (e.g. such as a GUID) associated to the call context, which you can subsequently filter on. This would then allow you to get a sequence of log messages up to and including the error from the same logical thread context.  </p>
+<p>log4net allows you to add contextual properties to a thread properties map using the static <code>LogicalThreadContext.Properties</code> instance. The only problem with this is that it’s static and not very conducive for testing - more on this later. For now, we can add context as follows:</p>
+<p>This context can now be included in log messages by including <code>%property{context}</code> in the layout as shown below:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"TraceAppender"</span> <span class="attr">type</span>=<span class="string">"log4net.Appender.TraceAppender"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">conversionPattern</span> <span class="attr">value</span>=<span class="string">"%d %-5p %property&#123;context&#125; %c - %m%n"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>If we were logging to a database, we could include the context as one of the columns.</p>
+<p><img src="/images/log4net-context-logged-too-database-example.png" alt="log4net-context-logged-too-database-example"></p>
+<p>This is especially useful when debugging, as you can locate the error log and then filter on the context of that error to get a full log trace.</p>
+<p>The point was raised about <code>LogicalThreadContext.Properties</code> not being particularly conducive for testing. In addition it’s something that should probably be abstracted out of the code as an aspect, because it’s probably unrelated to any business requirements and could be thought of as boilerplate. To deal with this, I’ve created a <a href="https://github.com/yesmarket/log4net.Extensions" target="_blank" rel="external">log4net.Extensions</a> library that can be used to add testability to contextual logging:</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyService</span> : <span class="title">IService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> ILogContextFactory _logContextFactory;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Service</span>(<span class="params">ILogContextFactory logContextFactory</span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        _logContextFactory = logContextFactory;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DoSomething</span>(<span class="params"></span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">using</span> (_logContextFactory.New().With(<span class="string">"context"</span>, Guid.NewGuid()))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>I’ve also created an <a href="https://github.com/yesmarket/log4net.Extensions" target="_blank" rel="external">log4net.AutoFac</a> library, which allows for abstracting out the establishment of context altogether when using the <a href="http://autofac.org/" target="_blank" rel="external">AutoFac</a> IoC container.</p>
+<p>The log4net.Extensions and log4net.AutoFac libraries have been pushed to nuget. Be sure to check them out and let me know what you think.</p>
+
+      
+    </div>
+
     
       
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/" data-id="cinjroncu0004asi5a4sf1ail" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/04/topshelf-where-have-you-been-all-my-life/">Topshelf; where have you been all my life?</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2016/04/topshelf-where-have-you-been-all-my-life/" class="archive-article-date"><time datetime="2016-04-28T03:59:50.000Z" itemprop="datePublished">April 28th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/04/git-submodules-detached-HEAD/">git submodules detached HEAD</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2016/04/git-submodules-detached-HEAD/" class="archive-article-date"><time datetime="2016-04-19T15:21:08.000Z" itemprop="datePublished">April 20th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/04/5-minute-hw-dotnet-on-ubuntu/">5 minute hw dotnet app on ubuntu</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2016/04/5-minute-hw-dotnet-on-ubuntu/" class="archive-article-date"><time datetime="2016-04-19T13:01:01.000Z" itemprop="datePublished">April 19th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1 - the problem with repositories</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2016/04/query-by-specification-part-1/" class="archive-article-date"><time datetime="2016-04-05T10:05:24.000Z" itemprop="datePublished">April 5th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/04/TFS-2015-is-good-but/">TFS-2015 is good, but...</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2016/04/TFS-2015-is-good-but/" class="archive-article-date"><time datetime="2016-04-05T04:48:23.000Z" itemprop="datePublished">April 5th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/">Migrating team projects to different collections in TFS using git and git-tf</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" class="archive-article-date"><time datetime="2016-03-07T11:17:17.000Z" itemprop="datePublished">March 7th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/02/goodbye-wordpress-hello-hexo/">Goodbye WordPress hello Hexo</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2016/02/goodbye-wordpress-hello-hexo/" class="archive-article-date"><time datetime="2016-02-27T13:06:37.000Z" itemprop="datePublished">February 27th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-    
-    
-      
-        </div></section>
+        <a href="http://www.blog.ryanbartsch.com/2015/07/contextual-logging-with-log4net/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2015" class="archive-year">2015</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NET/">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/log4net/">log4net</a></li></ul>
+
+
+    </footer>
+  </div>
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/08/scoped-bindings-in-specflow/">Scoped Bindings in SpecFlow</a>
-    </h1>
   
-
-
-    <div class="article-datetime">
-  <a href="/2015/08/scoped-bindings-in-specflow/" class="archive-article-date"><time datetime="2015-08-03T02:42:43.000Z" itemprop="datePublished">August 3rd</time></a>
-</div>
-
-  </header>
+  
 </article>
 
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/08/specflow-who-writes-the-specifications/">SpecFlow - who writes the specifications?</a>
-    </h1>
-  
 
 
-    <div class="article-datetime">
-  <a href="/2015/08/specflow-who-writes-the-specifications/" class="archive-article-date"><time datetime="2015-08-03T01:27:41.000Z" itemprop="datePublished">August 3rd</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/">AWS S3 as FTP and policy granularity issues</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2015/07/aws-s3-as-ftp-and-policy-granularity-issues/" class="archive-article-date"><time datetime="2015-07-09T05:32:46.000Z" itemprop="datePublished">July 9th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-  
-    </div></section>
   
 
 
   <div id="page-nav">
-    <nav><ul class="pagination"><li class="disabled"><span class="page-prev"><i class="fa fa-chevron-left"></i> Prev</a></li><li class="active"><span class="page-number">1</span></li><li><a class="page-number" href="/archives/page/2/">2</a></li><li><a class="page-next" rel="next" href="/archives/page/2/">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
+    <nav><ul class="pagination"><li><a class="page-prev" rel="prev" href="/"><i class="fa fa-chevron-left"></i> Prev</a></li><li><a class="page-number" href="/">1</a></li><li class="active"><span class="page-number">2</span></li><li class="disabled"><span class="page-next">Next <i class="fa fa-chevron-right"></i></a></li></ul></nav>
   </div>
 
 
