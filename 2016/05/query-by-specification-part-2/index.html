@@ -3,17 +3,38 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: WordPress | RTBLOGG</title>
+  <title>Query-by-specification part 2 - specifications to the rescue | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="cool">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RTBLOGG">
-<meta property="og:url" content="http://www.blog.ryanbartsch.com/tags/WordPress/index.html">
+  <meta name="description" content="This is part 2 of the ‘query-by-specification’ series:
+
+Part 1 – the problem with repositories
+Part 2 – specifications to the rescue
+Part 3 – introducing my own query.by.specification framework
+
+In th">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Query-by-specification part 2 - specifications to the rescue">
+<meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/05/query-by-specification-part-2/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description" content="cool">
+<meta property="og:description" content="This is part 2 of the ‘query-by-specification’ series:
+
+Part 1 – the problem with repositories
+Part 2 – specifications to the rescue
+Part 3 – introducing my own query.by.specification framework
+
+In th">
+<meta property="og:image" content="http://www.blog.ryanbartsch.com/images/meerkat.png">
+<meta property="og:updated_time" content="2016-05-09T05:16:26.627Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RTBLOGG">
-<meta name="twitter:description" content="cool">
+<meta name="twitter:title" content="Query-by-specification part 2 - specifications to the rescue">
+<meta name="twitter:description" content="This is part 2 of the ‘query-by-specification’ series:
+
+Part 1 – the problem with repositories
+Part 2 – specifications to the rescue
+Part 3 – introducing my own query.by.specification framework
+
+In th">
+<meta name="twitter:image" content="http://www.blog.ryanbartsch.com/images/meerkat.png">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -82,40 +103,140 @@
 </div>
     <div class="row">
         <div class="col-sm-8 blog-main">
-          
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
+          <article id="post-query-by-specification-part-2" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
     
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/02/goodbye-wordpress-hello-hexo/">Goodbye WordPress hello Hexo</a>
+    <h1 class="article-title" itemprop="name">
+      Query-by-specification part 2 - specifications to the rescue
     </h1>
   
 
 
+  </header>
+
+  <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2016/02/goodbye-wordpress-hello-hexo/" class="archive-article-date"><time datetime="2016-02-27T13:06:37.000Z" itemprop="datePublished">February 27th</time></a>
+  <a href="/2016/05/query-by-specification-part-2/" class="article-date"><time datetime="2016-05-09T01:40:42.000Z" itemprop="datePublished">2016-05-09</time></a>
 </div>
 
-  </header>
-</article>
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>This is part 2 of the ‘query-by-specification’ series:</p>
+<ul>
+<li><a href="/2016/04/query-by-specification-part-1/">Part 1 – the problem with repositories</a></li>
+<li><a href="#part2">Part 2 – specifications to the rescue</a></li>
+<li><a href="#">Part 3 – introducing my own query.by.specification framework</a></li>
+</ul>
+<p><a name="part2"></a>In the previous part of this series, we looked at some of the limitations of the repository pattern and why this might not be the best approach in certain situations. In this part we’ll take a look at the specification pattern, specifically in the context of data access layers.</p>
+<p>I’ve often encountered scenarios where I need to implement a large number of different queries against a single entity. This scenario might happen because of a single user-story such as some kind of search feature where there is a large number of searchable criteria. Alternatively, it might arise following multiple independent user-stories that each require access to some common entity (but with different filter criteria). In these situations, how do we ensure our data access code doesn’t degrade into 1000+ LOC repositories that violate SOLID and DRY? The answer to this question is ‘specifications’.</p>
+<p>The specification pattern requires a slight change in mindset from the traditional repository pattern approach. Instead of thinking in terms of whole queries we need to think in terms of common sets of filter criteria. These common sets of filter criteria are basically the specifications. </p>
+<p>Going back to our ‘loan’ example from the previous part of this blog series, we might be able to define specifications as follows:</p>
+<ul>
+<li>BranchNameSpecification</li>
+<li>RegionSpecification</li>
+<li>ArrearsAmountSpecification</li>
+<li>InstalmentAmountSpecification</li>
+</ul>
+<p>Our repository, instead of having methods for every combination of filter criteria, now has a single function to get loans by a specification as shown below:</p>
+<pre><code>public interface ILoanRepository
+{
+    IEnumerable&lt;Loan&gt; FindBy(ISpecification&lt;Loan&gt; specification);
+}
+</code></pre><p>Note: ISpecification<loan> can be a composite specification (‘AndSpecification’, ‘OrSpecification’ etc.) such that multiple filter criteria can be chained together. Depending on the implementation you might define some kind of internal DSL to make things a bit easier to use. </loan></p>
+<p>The following example shows how you might get loans from the ‘East’ region that are in arears by more than $100 using a crude fluent interface:</p>
+<pre><code>var loans = _loanRepository.FindBy(new RegionSpecification(&quot;East&quot;).And(new ArrearsAmountSpecification(Operator.GreaterThan, 100M)));
+</code></pre><p>The ISpecification<t> interface might vary depending on how you want to implementat things. As we’ll see in the next part of this blog series, I like to define the ISpecification<t> contract as follows:</t></t></p>
+<pre><code>public interface ISpecification&lt;T&gt;
+{
+    Expression&lt;Func&lt;T, bool&gt;&gt; GetPredicate();
+}
+</code></pre><p>My aim was to keep things as simple as possible. Basically the GetPredicate() implementation just needs to define a strongly typed lambda expression to determine if an object matches some arbitrary criteria. Simples</p>
+<p><img style="float: left;" src="/images/meerkat.png"></p>
+<div style=" clear: both;"><br>The following example shows how a hypothetical region specification might look:<br></div>
+
+<pre><code>public class RegionNameSpecification : BaseSpecification&lt;Loan&gt;
+{
+    public RegionNameSpecification(string name)
+    {
+        Name = name;
+    }
+
+    public string Name { get; set; }
+
+    public override Expression&lt;Func&lt;Loan, bool&gt;&gt; GetPredicate()
+    {
+        return loan =&gt; loan.RegionName == Name;
+    }
+}
+</code></pre><p>To contrast this with the repository approach we can see that this approach now adheres to DRY, SRP and OCP.</p>
+<ul>
+<li>DRY – we no longer need to duplicate partial queries and/or predicates.</li>
+<li>SRP - the repository implementation has a single responsibility, which is to find entities that match the defined specification.</li>
+<li>OCP – we should never have to modify the repository. If we need to query by some undefined filter criteria, we simply add a new specification.</li>
+</ul>
+<p>Before we wrap up this part of the series, it would be biased of me to not mention any of the drawbacks to the specification pattern - this is not a panacea to be used for all data access layers. Careful consideration should be given to whether or not it is appropriate for your scenario and that the pros outweigh the cons. Some of the ‘not-so-good’ things about the specification pattern are as follows:</p>
+<ul>
+<li>While the repository pattern is quite natural and very easy to implement, the specification patttern incurs a bit of a overhead both terms of a) ease of understanding and b) the need to implement some boilerplate. In the case of the latter; sure there are many existing query-by-specification frameworks, however, it’s still something extra that you and your team would have to master.</li>
+<li>Some critiques of the specification pattern point to the fact that the repository ‘find-by’ function is a little bit too open ended and doesn’t define an explicit contract for use from the business layer. While I agree with this in principle, sometimes it comes down to the lesser of two evils.</li>
+</ul>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/05/query-by-specification-part-2/" data-id="cinzht65u0008kki5jf6czq21" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://www.blog.ryanbartsch.com/2016/05/query-by-specification-part-2/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NET/">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Entity-Framework/">Entity Framework</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Query-by-specification/">Query-by-specification</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SOLID/">SOLID</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/design-patterns/">design patterns</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+
+
+    </footer>
+  </div>
 
   
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
   
-    </div></section>
   
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2016/04/topshelf-where-have-you-been-all-my-life/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">Topshelf; where have you been all my life?</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
+</article>
 
 
 
@@ -204,11 +325,13 @@
 <script>
   var disqus_shortname = 'rtblogg';
   
+  var disqus_url = 'http://www.blog.ryanbartsch.com/2016/05/query-by-specification-part-2/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
