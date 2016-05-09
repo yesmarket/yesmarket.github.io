@@ -131,15 +131,15 @@
 {
     IEnumerable&lt;Loan&gt; FindBy(ISpecification&lt;Loan&gt; specification);
 }
-</code></pre><p>Note: ISpecification<loan> can be a composite specification (‘AndSpecification’, ‘OrSpecification’ etc.) such that multiple filter criteria can be chained together. Depending on the implementation you might define some kind of internal DSL to make things a bit easier to use. </loan></p>
-<p>The following example shows how you might get loans from the ‘East’ region that are in arears by more than $100 using a crude fluent interface:</p>
+</code></pre><p>Note: <code lang="sh" linenumbers="off">ISpecification<loan></loan></code> can be a composite specification (‘AndSpecification’, ‘OrSpecification’ etc.) such that multiple filter criteria can be chained together. Depending on the implementation you might define some kind of <a href="http://martinfowler.com/books/dsl.html" target="_blank" rel="external">internal DSL</a> to make things a bit easier to use. </p>
+<p>The following example shows how you might get loans from the ‘East’ region that are in arears by more than $100 using a crude <a href="http://martinfowler.com/bliki/FluentInterface.html" target="_blank" rel="external">fluent interface</a>:</p>
 <pre><code>var loans = _loanRepository.FindBy(new RegionSpecification(&quot;East&quot;).And(new ArrearsAmountSpecification(Operator.GreaterThan, 100M)));
-</code></pre><p>The ISpecification<t> interface might vary depending on how you want to implementat things. As we’ll see in the next part of this blog series, I like to define the ISpecification<t> contract as follows:</t></t></p>
+</code></pre><p>The <code lang="sh" linenumbers="off">ISpecification<t></t></code> interface might vary depending on how you want to implementat things. As we’ll see in the next part of this blog series, I like to define the <code lang="sh" linenumbers="off">ISpecification<t></t></code> contract as follows:</p>
 <pre><code>public interface ISpecification&lt;T&gt;
 {
     Expression&lt;Func&lt;T, bool&gt;&gt; GetPredicate();
 }
-</code></pre><p>My aim was to keep things as simple as possible. Basically the GetPredicate() implementation just needs to define a strongly typed lambda expression to determine if an object matches some arbitrary criteria. Simples</p>
+</code></pre><p>My aim was to keep things as simple as possible. Basically the <code lang="sh" linenumbers="off">GetPredicate()</code> implementation just needs to define a strongly typed lambda expression to determine if an object matches some arbitrary criteria. Simples</p>
 <p><img style="float: left;" src="/images/meerkat.png"></p>
 <div style=" clear: both;"><br>The following example shows how a hypothetical region specification might look:<br></div>
 
