@@ -3,17 +3,23 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: design patterns | RTBLOGG</title>
+  <title>Expression tree equality in .NET | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="cool">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RTBLOGG">
-<meta property="og:url" content="http://www.blog.ryanbartsch.com/tags/design-patterns/index.html">
+  <meta name="description" content="Today I was refactoring a codebase that I’ve been working on and I ran into a bit of an interesting problem involving expression trees.
+The codebase in question isn’t really all that important in term">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Expression tree equality in .NET">
+<meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/05/expression-tree-equality-in-dotnet/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description" content="cool">
+<meta property="og:description" content="Today I was refactoring a codebase that I’ve been working on and I ran into a bit of an interesting problem involving expression trees.
+The codebase in question isn’t really all that important in term">
+<meta property="og:image" content="http://www.blog.ryanbartsch.com/images/oh-yeah.jpg">
+<meta property="og:updated_time" content="2016-05-10T15:50:24.050Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RTBLOGG">
-<meta name="twitter:description" content="cool">
+<meta name="twitter:title" content="Expression tree equality in .NET">
+<meta name="twitter:description" content="Today I was refactoring a codebase that I’ve been working on and I ran into a bit of an interesting problem involving expression trees.
+The codebase in question isn’t really all that important in term">
+<meta name="twitter:image" content="http://www.blog.ryanbartsch.com/images/oh-yeah.jpg">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -82,60 +88,112 @@
 </div>
     <div class="row">
         <div class="col-sm-8 blog-main">
-          
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
+          <article id="post-expression-tree-equality-in-dotnet" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
     
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/05/query-by-specification-part-2/">Query-by-specification part 2 - specifications to the rescue</a>
+    <h1 class="article-title" itemprop="name">
+      Expression tree equality in .NET
     </h1>
   
 
 
+  </header>
+
+  <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2016/05/query-by-specification-part-2/" class="archive-article-date"><time datetime="2016-05-09T01:40:42.000Z" itemprop="datePublished">May 9th</time></a>
+  <a href="/2016/05/expression-tree-equality-in-dotnet/" class="article-date"><time datetime="2016-05-10T14:17:43.000Z" itemprop="datePublished">2016-05-10</time></a>
 </div>
 
-  </header>
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Today I was refactoring a codebase that I’ve been working on and I ran into a bit of an interesting problem involving expression trees.</p>
+<p>The codebase in question isn’t really all that important in terms of this discussion, but to quickly describe my problem; I needed to filter a list of <a href="https://www.google.com.au/webhp?sourceid=chrome-instant&amp;ion=1&amp;espv=2&amp;ie=UTF-8#q=System.Linq.Expressions.Expression" target="_blank" rel="external">System.Linq.Expressions.Expression</a> by distinct.</p>
+<p>This seemed like a pretty simple thing to do, that is, until I found out that Equals for expressions is implemented as reference equality. This means the following would fail:</p>
+<pre><code>Expression&lt;Func&lt;Order, object&gt;&gt; x = order =&gt; order.Customer.Address;
+Expression&lt;Func&lt;Order, object&gt;&gt; y = order =&gt; order.Customer.Address;
+Assert.True(x.Equals(y)); // will fail
+</code></pre><p>In my particular scenario, reference equality wouldn’t work as I had a list of seperately provided expression trees. I needed a way to determine if these expression trees were essentially the same i.e. by value.</p>
+<p>My first thought was to just do a <code lang="cs" linenumbers="off">ToString()</code> on the Expression and to tell you the truth this did kinda work, but it felt dirty… there had to be a better way. What I wanted was a custom expression tree equality comparer - an <code>IEqualityComparer&lt;Expression&gt;</code> implementation if you will, preferably on the public nuget.org feed so that I could quickly start using this from within my project. Oh, I should be so lucky.</p>
+<p>What I did manage to find was some code from a project called <a href="https://sourcecodebrowser.com/db4o/7.4.121.14026plus-pdfsg/class_db4objects_1_1_db4o_1_1_linq_1_1_expressions_1_1_expression_equality_comparer.html" target="_blank" rel="external">LINQ to db40</a> as well as a <a href="http://badecho.com/2012/02/expression-equality-comparer-part-i/" target="_blank" rel="external">blog series</a> by a chappy named Matt Weber. Both of these helped give me a really good starting point, but… unfortunately, both of these were for older versions of the .NET framework. If I wanted to get things working, I was going to have to do a bit of refactoring.</p>
+<p>For the custom expression tree comparison, I created an <code lang="cs" linenumbers="off">IEqualityComparer<expression></expression></code> implementation called <code lang="cs" linenumbers="off">ExpressionEqualityComparer</code> as follows:</p>
+<pre><code>public class ExpressionEqualityComparer : IEqualityComparer&lt;Expression&gt;
+{
+    public bool Equals(Expression x, Expression y)
+    {
+        return new ExpressionValueComparer().Compare(x, y);
+    }
+
+    public int GetHashCode(Expression obj)
+    {
+        return new ExpressionHashCodeResolver().GetHashCodeFor(obj);
+    }
+}
+</code></pre><p>This is the main class that you would interact with for comparing expression trees. The following example demonstrates a simple use of this class:</p>
+<pre><code>Expression&lt;Func&lt;Order, bool&gt;&gt; x = order =&gt; order.Customer.Name == &quot;Joe Bloggs&quot;;
+Expression&lt;Func&lt;Order, bool&gt;&gt; y = order =&gt; order.Customer.Name == &quot;Joe Bloggs&quot;;
+Assert.True(new ExpressionEqualityComparer().Equals(x, y)); // will pass
+</code></pre><p>Most of the gory implementation details are abstracted away in <code lang="cs" linenumbers="off"><a href="https://github.com/yesmarket/yesmarket.Linq.Expressions/blob/master/yesmarket.Linq.Expressions/Support/ExpressionValueComparer.cs" target="_blank" rel="external">ExpressionValueComparer</a></code> and <code lang="cs" linenumbers="off"><a href="https://github.com/yesmarket/yesmarket.Linq.Expressions/blob/master/yesmarket.Linq.Expressions/Support/ExpressionHashCodeResolver.cs" target="_blank" rel="external">ExpressionHashCodeResolver</a></code>. Both of these are subclasses of <a href="https://msdn.microsoft.com/en-us/library/system.linq.expressions.expressionvisitor.aspx" target="_blank" rel="external">ExpressionVisitor</a>, which can be used to traverse expression trees. During the traversal, specific properties of individual nodes are compared for equality. If any of the relevant properties are not equal, the comparison fails.</p>
+<p>Pretty cool, huh!</p>
+<p>Anyway one other thing about those resources I mentioned earlier; they were great and all, but I had to do code scraping to pull things together and ultimately they didn’t compile under .NET 4.5+, had bits missing e.g. extension methods etc. </p>
+<p>Wouldn’t it be great if there was a public git repo and a public nuget package published to the nuget.org feed? <a href="https://github.com/yesmarket/yesmarket.Linq.Expressions" target="_blank" rel="external">Yes</a> and <a href="https://www.nuget.org/packages/yesmarket.Linq.Expressions/" target="_blank" rel="external">Yes</a>.</p>
+<div style="float:left;"><br>    <img src="/images/oh-yeah.jpg" alt=""><br></div>
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/05/expression-tree-equality-in-dotnet/" data-id="cio1lufee0006egcio1862x0t" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://www.blog.ryanbartsch.com/2016/05/expression-tree-equality-in-dotnet/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NET/">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Expression-trees/">Expression trees</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+  
+  
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2016/05/query-by-specification-part-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">Query-by-specification part 2 - specifications to the rescue</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
 </article>
-
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/04/query-by-specification-part-1/">Query-by-specification part 1 - the problem with repositories</a>
-    </h1>
-  
-
-
-    <div class="article-datetime">
-  <a href="/2016/04/query-by-specification-part-1/" class="archive-article-date"><time datetime="2016-04-05T10:05:24.000Z" itemprop="datePublished">April 5th</time></a>
-</div>
-
-  </header>
-</article>
-
-  
-  
-    </div></section>
-  
 
 
 
@@ -224,11 +282,13 @@
 <script>
   var disqus_shortname = 'rtblogg';
   
+  var disqus_url = 'http://www.blog.ryanbartsch.com/2016/05/expression-tree-equality-in-dotnet/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
