@@ -14,7 +14,7 @@ The codebase in question isn’t really all that important in term">
 <meta property="og:description" content="Today I was refactoring a codebase that I’ve been working on and I ran into a bit of an interesting problem involving expression trees.
 The codebase in question isn’t really all that important in term">
 <meta property="og:image" content="http://www.blog.ryanbartsch.com/images/oh-yeah.jpg">
-<meta property="og:updated_time" content="2016-05-10T15:50:24.050Z">
+<meta property="og:updated_time" content="2016-05-10T15:56:41.937Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Expression tree equality in .NET">
 <meta name="twitter:description" content="Today I was refactoring a codebase that I’ve been working on and I ran into a bit of an interesting problem involving expression trees.
@@ -123,7 +123,7 @@ Assert.True(x.Equals(y)); // will fail
 </code></pre><p>In my particular scenario, reference equality wouldn’t work as I had a list of seperately provided expression trees. I needed a way to determine if these expression trees were essentially the same i.e. by value.</p>
 <p>My first thought was to just do a <code lang="cs" linenumbers="off">ToString()</code> on the Expression and to tell you the truth this did kinda work, but it felt dirty… there had to be a better way. What I wanted was a custom expression tree equality comparer - an <code>IEqualityComparer&lt;Expression&gt;</code> implementation if you will, preferably on the public nuget.org feed so that I could quickly start using this from within my project. Oh, I should be so lucky.</p>
 <p>What I did manage to find was some code from a project called <a href="https://sourcecodebrowser.com/db4o/7.4.121.14026plus-pdfsg/class_db4objects_1_1_db4o_1_1_linq_1_1_expressions_1_1_expression_equality_comparer.html" target="_blank" rel="external">LINQ to db40</a> as well as a <a href="http://badecho.com/2012/02/expression-equality-comparer-part-i/" target="_blank" rel="external">blog series</a> by a chappy named Matt Weber. Both of these helped give me a really good starting point, but… unfortunately, both of these were for older versions of the .NET framework. If I wanted to get things working, I was going to have to do a bit of refactoring.</p>
-<p>For the custom expression tree comparison, I created an <code lang="cs" linenumbers="off">IEqualityComparer<expression></expression></code> implementation called <code lang="cs" linenumbers="off">ExpressionEqualityComparer</code> as follows:</p>
+<p>For the custom expression tree comparison, I created an <code lang="cs" linenumbers="off"><code>IEqualityComparer&lt;Expression&gt;</code></code> implementation called <code lang="cs" linenumbers="off">ExpressionEqualityComparer</code> as follows:</p>
 <pre><code>public class ExpressionEqualityComparer : IEqualityComparer&lt;Expression&gt;
 {
     public bool Equals(Expression x, Expression y)
