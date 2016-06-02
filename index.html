@@ -103,6 +103,112 @@
         <div class="col-sm-8 blog-main">
           
   
+    <article id="post-streamlining-bootstrap" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
+    
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/06/streamlining-bootstrap/">Streamlining Bootstrap</a>
+    </h1>
+  
+
+
+  </header>
+
+  <div class="article-meta">
+    <div class="article-datetime">
+  <a href="/2016/06/streamlining-bootstrap/" class="article-date"><time datetime="2016-06-01T14:11:23.000Z" itemprop="datePublished">2016-06-01</time></a>
+</div>
+
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>At my current workplace we need to smash out responsive pages at a pretty fast rate. As far as building the responsiveness, we’ve decided to specialise a bit whereby we have a guy working with the marketing team to build the responsive pages. These are subsequently given to the DEVs for data binding and wiring up to the back-end. The current approach <em>was</em> to build everything in <a href="https://www.visualstudio.com/" target="_blank" rel="external">Visual Studio</a>, but this seemed like overkill. Don’t get me wrong; I love Visual Studio and have been using it since VS 2005, however it’s a pretty heavy IDE for the task at hand.</p>
+<p>I played around with a few bootstrap editors like <a href="https://jetstrap.com/" target="_blank" rel="external">jetstrap</a> and <a href="http://pingendo.com/" target="_blank" rel="external">pingendo</a>, but we require a pretty high level of customisation and to tell you the truth the quality of the generated markup from these tools was far from perfect. So back to ol’ faithful <a href="https://www.sublimetext.com/" target="_blank" rel="external">Sublime Text</a>.</p>
+<p>I’ve been playing around with <a href="http://gulpjs.com/" target="_blank" rel="external">gulp</a> a lot lately - on a side note gulp &gt; grunt, but I digress… I started playing around with gulp to build an awesome workflow for smashing out responsive HTML using <a href="http://getbootstrap.com/" target="_blank" rel="external">bootstrap</a> and <a href="http://sass-lang.com/" target="_blank" rel="external">SASS</a>. Some of the Gulp plugins that I used include:</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/gulp-inject" target="_blank" rel="external">gulp-inject</a> for injecting custom stylesheets and JavaScript into HTML pages.</li>
+<li><a href="https://www.npmjs.com/package/wiredep" target="_blank" rel="external">wiredep</a> for wiring up bower dependencies into HTML pages.</li>
+<li><a href="https://www.npmjs.com/package/gulp-sass" target="_blank" rel="external">gulp-sass</a> for automating the compilation of SASS into CSS.</li>
+<li><a href="https://www.npmjs.com/package/gulp-autoprefixer" target="_blank" rel="external">gulp-autoprefixer</a> for injecting vendor prefixes into CSS.</li>
+<li><a href="http://nodemon.io/" target="_blank" rel="external">nodemon</a> for monitoring changes in source code and automatically restarting <a href="http://expressjs.com/" target="_blank" rel="external">express</a>.</li>
+<li><a href="https://www.browsersync.io/" target="_blank" rel="external">browser-sync</a> for keeping multiple browsers &amp; devices in sync when building websites.</li>
+</ul>
+<p>All this was pretty cool stuff, especially when used in combination with Sublime plugins like <a href="https://packagecontrol.io/packages/Emmet" target="_blank" rel="external">Emmet</a>, and bootstrap <a href="https://packagecontrol.io/packages/Bootstrap%203%20Snippets" target="_blank" rel="external">3</a>|<a href="https://packagecontrol.io/packages/Bootstrap%204%20Snippets" target="_blank" rel="external">4</a> snippets. But what is <em>really</em> cool was bringing the old mate <a href="http://yeoman.io/" target="_blank" rel="external">yeoman</a> along to the party.</p>
+<p><img src="/images/yeoman.png" alt=""></p>
+<p>I’d used yeoman generators before, so I had the idea of writing my own generator for scaffolding out my streamlined bootstrap workflow. Unfortunately there’s a few pre-requisites to all of this, so I’ll give you a quick rundown (in Windows PowerShell). Note: I installed all this stuff over a number of years, so hopefully I didn’t miss anything…</p>
+<pre><code># install chocolatey
+Set-ExecutionPolicy RemoteSigned
+iwr https://chocolatey.org/install.ps1 | iex
+# install a few chocolatey packages
+cinst git -y
+cinst poshgit -y
+cinst nodejs -y
+# install a few global npm packages
+npm i -g bower
+npm i -g gulp
+npm i -g yo
+# clone my yeoman generator
+git clone https://github.com/yesmarket/generator-bootstrap
+cd generator-bootstrap
+npm link
+# navigate to a location for builsing your streamlined bootstrap pages
+cd [path-to-streamlined-bootstrap-dir]
+# put the yeoman to work
+yo bootstrap
+# install all the bower dependencies
+bower install
+# open everything in sublime text
+subl .
+# create a new HTML page
+yo bootstrap:newpage
+# and finally run the gulp task runner to do all the things
+gulp start
+# profit :P
+</code></pre><p>When you run the yo bootstrap command you’ll have to answer a few questions, which influence how everything is generated:</p>
+<p><img src="/images/yops1.png" alt=""></p>
+<p>Similarly, when you run the yeoman sub-generator yo bootstrap:newpage you’ll have to tell the yeoman the name of your page, which will be generated from a template.</p>
+<p><img src="/images/yops2.png" alt=""></p>
+<p>My yeoman generator is on <a href="https://github.com/yesmarket/generator-bootstrap" target="_blank" rel="external">GitHub</a> and free to use. Enjoy.</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/06/streamlining-bootstrap/" data-id="cioy9vkc80008egcilyupauee" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://www.blog.ryanbartsch.com/2016/06/streamlining-bootstrap/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Emmet/">Emmet</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SASS/">SASS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Sublime-Text/">Sublime Text</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bootstrap/">bootstrap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gulp/">gulp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yeoman/">yeoman</a></li></ul>
+
+
+    </footer>
+  </div>
+
+  
+  
+  
+</article>
+
+
+
+  
     <article id="post-expression-tree-equality-in-dotnet" class="article article-type-post" itemscope itemprop="blogPost">
 
   <header class="article-header">
@@ -169,7 +275,7 @@ Assert.True(new ExpressionEqualityComparer().Equals(x, y)); // will pass
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/05/expression-tree-equality-in-dotnet/" data-id="cio1lufee0006egcio1862x0t" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/05/expression-tree-equality-in-dotnet/" data-id="cioy9vkc30004egcid19rrgj5" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -286,7 +392,7 @@ Assert.True(new ExpressionEqualityComparer().Equals(x, y)); // will pass
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/05/query-by-specification-part-2/" data-id="cio1lufer000degci9cwj0oik" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/05/query-by-specification-part-2/" data-id="cioy9vkci000degcicaeupd01" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -352,7 +458,7 @@ Assert.True(new ExpressionEqualityComparer().Equals(x, y)); // will pass
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/topshelf-where-have-you-been-all-my-life/" data-id="cio1lufew000iegcioyolg7qq" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/topshelf-where-have-you-been-all-my-life/" data-id="cioy9vkcb000aegci2hs83ejv" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -423,7 +529,7 @@ upsub = !git submodule update --init --recursive --remote &amp;&amp; git submodu
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/git-submodules-detached-HEAD/" data-id="cio1lufeg0007egci1s3zo8ec" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/git-submodules-detached-HEAD/" data-id="cioy9vkc60007egcidwybi4xp" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -505,7 +611,7 @@ dnx run
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/5-minute-hw-dotnet-on-ubuntu/" data-id="cio1lufe50001egciixogj4q2" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/5-minute-hw-dotnet-on-ubuntu/" data-id="cioy9vkbs0000egci27epuxw2" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -610,7 +716,7 @@ dnx run
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/" data-id="cio1lufep000begcikaaxt2e8" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/query-by-specification-part-1/" data-id="cioy9vkcg000begciwuv835hc" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -693,7 +799,7 @@ dnx run
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/" data-id="cio1lufe10000egciad4w1637" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/04/TFS-2015-is-good-but/" data-id="cioy9vkby0001egcih276sdge" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -785,7 +891,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cio1lufel000aegciobal6ixs" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/03/migrating-team-projects-to-different-collections-in-TFS-using-git-and-git-tf/" data-id="cioy9vkcn000megciae1z0pwc" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -874,7 +980,7 @@ $ git merge $source
     
 
     <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cio1lufek0008egcir5t0al8c" class="article-share-link">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/02/goodbye-wordpress-hello-hexo/" data-id="cioy9vkc40006egcihmmaytor" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
@@ -884,120 +990,6 @@ $ git merge $source
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AWS/">AWS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WordPress/">WordPress</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/staticgen/">staticgen</a></li></ul>
-
-
-    </footer>
-  </div>
-
-  
-  
-  
-</article>
-
-
-
-  
-    <article id="post-scoped-bindings-in-specflow" class="article article-type-post" itemscope itemprop="blogPost">
-
-  <header class="article-header">
-    
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/08/scoped-bindings-in-specflow/">Scoped Bindings in SpecFlow</a>
-    </h1>
-  
-
-
-  </header>
-
-  <div class="article-meta">
-    <div class="article-datetime">
-  <a href="/2015/08/scoped-bindings-in-specflow/" class="article-date"><time datetime="2015-08-03T02:42:43.000Z" itemprop="datePublished">2015-08-03</time></a>
-</div>
-
-    
-    
-
-  </div>
-  <div class="article-inner">
-
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>One of the things that I found slightly problematic about <a href="http://www.specflow.org/" target="_blank" rel="external">SpecFlow</a> is the global scoping of step definitions within bound classes, specifically when there are multiple feature files referring to shared step definitions.</p>
-<p><strong>So why do I feel this way?</strong></p>
-<p>Well, firstly there’s the reduced discoverability of step definitions. Sure you can use the build-in SpecFlow navigation feature to get to the definition, but this seems a little inefficient to me. I guess you could also use <a href="https://www.jetbrains.com/resharper/" target="_blank" rel="external">ReSharper</a>, but not everyone has this luxury. My other main gripe is that fact that you can’t use (or at least have to be careful using) private fields to maintain state for individual step definitions. The alternative is to use the ScenarioContext, which is a little over complicated for mine:</p>
-<pre lang="csharp">
-[Given(@"a property price of (.*)")]
-public void GivenAPropertyPriceOf(Decimal propertyPrice)
-{
-    ScenarioContext.Current.Set(propertyPrice, "propertyPrice");
-}
-
-[When(@"we press the button")]
-public void WhenWePressTheButton()
-{
-    var propertyPrice = ScenarioContext.Current.Get<decimal>("propertyPrice")
-    // ...
-}
-</decimal></pre>
-
-<p><strong>The solution – scoped bindings!</strong></p>
-<p>Scoped bindings allow the developer to have a one-to-one mapping between feature files and the step definitions defined by that feature. Sure we lose some reusability of individual step definitions, but in my opinion the pros outweigh the cons. The approach I’ve taken is to have my generated class files scoped to an associated feature as shown below:</p>
-<pre lang="csharp">
-    [Binding]
-    [Scope(Feature = "Name of Feature")]
-    public class Test
-    {
-        private decimal _propertyPrice;
-        private decimal _propertyValue;
-
-        [Given(@"a property price of (.*)")]
-        public void GivenAPropertyPriceOf(Decimal propertyPrice)
-        {
-            _propertyPrice = propertyPrice;
-        }
-
-        [Given(@"a property value of (.*)")]
-        public void GivenAPropertyValueOf(Decimal propertyValue)
-        {
-            _propertyValue = propertyValue;
-        }
-
-        [When(@"we press the button")]
-        public void WheneWePressTheButton()
-        {
-            // ...
-        }
-
-        [Then(@"the result is (.*)")]
-        public void ThenTheResultIs(Decimal result)
-        {
-            // ...
-        }
-    }
-</pre>
-
-<p>Now I’ve got quick and easy discoverability as well as the fact that I can use private fields without concern.</p>
-
-      
-    </div>
-
-    
-      
-
-    
-
-    <footer class="article-footer">
-      <a data-url="http://www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/" data-id="cio1lufes000eegcixui5tq4l" class="article-share-link">
-        <i class="fa fa-share"></i> Share
-      </a>
-      
-        <a href="http://www.blog.ryanbartsch.com/2015/08/scoped-bindings-in-specflow/#disqus_thread" class="article-comment-link">
-          <i class="fa fa-comment"></i> Comments
-        </a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NET/">.NET</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpecFlow/">SpecFlow</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Testing/">Testing</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dev/">dev</a></li></ul>
 
 
     </footer>
@@ -1035,7 +1027,7 @@ public void WhenWePressTheButton()
   
   <div class="sidebar-module">
     <h4>Tags</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/net-core-1-0/">.net core 1.0</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Entity-Framework/">Entity Framework</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Expression-trees/">Expression trees</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub/">GitHub</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub-pages/">GitHub-pages</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Hexo/">Hexo</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/IAM/">IAM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/PowerShell/">PowerShell</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Query-by-specification/">Query-by-specification</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/S3/">S3</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SOLID/">SOLID</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TF-Build/">TF Build</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TFS/">TFS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Topshelf/">Topshelf</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/WordPress/">WordPress</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/automation/">automation</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/design-patterns/">design patterns</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">9</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/">git</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git-tf/">git-tf</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/log4net/">log4net</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/staticgen/">staticgen</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/ubuntu/">ubuntu</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/windows-services/">windows-services</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/yeoman/">yeoman</a><span class="sidebar-module-list-count">1</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/NET/">.NET</a><span class="sidebar-module-list-count">7</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/net-core-1-0/">.net core 1.0</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/AWS/">AWS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Cucumber/">Cucumber</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Emmet/">Emmet</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Entity-Framework/">Entity Framework</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Expression-trees/">Expression trees</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub/">GitHub</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/GitHub-pages/">GitHub-pages</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Hexo/">Hexo</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/IAM/">IAM</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/PowerShell/">PowerShell</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Query-by-specification/">Query-by-specification</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/S3/">S3</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SASS/">SASS</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SOLID/">SOLID</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/SpecFlow/">SpecFlow</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Sublime-Text/">Sublime Text</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TF-Build/">TF Build</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/TFS/">TFS</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Testing/">Testing</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/Topshelf/">Topshelf</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/WordPress/">WordPress</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/automation/">automation</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/bootstrap/">bootstrap</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/design-patterns/">design patterns</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/dev/">dev</a><span class="sidebar-module-list-count">9</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git/">git</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/git-tf/">git-tf</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/gulp/">gulp</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/log4net/">log4net</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/staticgen/">staticgen</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/ubuntu/">ubuntu</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/windows-services/">windows-services</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/tags/yeoman/">yeoman</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -1044,7 +1036,7 @@ public void WhenWePressTheButton()
   <div class="sidebar-module">
     <h4>Tag Cloud</h4>
     <p class="tagcloud">
-      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/net-core-1-0/" style="font-size: 10px;">.net core 1.0</a> <a href="/tags/AWS/" style="font-size: 13.33px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/Entity-Framework/" style="font-size: 13.33px;">Entity Framework</a> <a href="/tags/Expression-trees/" style="font-size: 10px;">Expression trees</a> <a href="/tags/GitHub/" style="font-size: 13.33px;">GitHub</a> <a href="/tags/GitHub-pages/" style="font-size: 10px;">GitHub-pages</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IAM/" style="font-size: 10px;">IAM</a> <a href="/tags/PowerShell/" style="font-size: 10px;">PowerShell</a> <a href="/tags/Query-by-specification/" style="font-size: 13.33px;">Query-by-specification</a> <a href="/tags/S3/" style="font-size: 10px;">S3</a> <a href="/tags/SOLID/" style="font-size: 13.33px;">SOLID</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/TF-Build/" style="font-size: 10px;">TF Build</a> <a href="/tags/TFS/" style="font-size: 13.33px;">TFS</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/Topshelf/" style="font-size: 10px;">Topshelf</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/automation/" style="font-size: 10px;">automation</a> <a href="/tags/design-patterns/" style="font-size: 13.33px;">design patterns</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/git-tf/" style="font-size: 10px;">git-tf</a> <a href="/tags/log4net/" style="font-size: 10px;">log4net</a> <a href="/tags/staticgen/" style="font-size: 10px;">staticgen</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/windows-services/" style="font-size: 10px;">windows-services</a> <a href="/tags/yeoman/" style="font-size: 10px;">yeoman</a>
+      <a href="/tags/NET/" style="font-size: 16.67px;">.NET</a> <a href="/tags/net-core-1-0/" style="font-size: 10px;">.net core 1.0</a> <a href="/tags/AWS/" style="font-size: 13.33px;">AWS</a> <a href="/tags/Cucumber/" style="font-size: 10px;">Cucumber</a> <a href="/tags/Emmet/" style="font-size: 10px;">Emmet</a> <a href="/tags/Entity-Framework/" style="font-size: 13.33px;">Entity Framework</a> <a href="/tags/Expression-trees/" style="font-size: 10px;">Expression trees</a> <a href="/tags/GitHub/" style="font-size: 13.33px;">GitHub</a> <a href="/tags/GitHub-pages/" style="font-size: 10px;">GitHub-pages</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IAM/" style="font-size: 10px;">IAM</a> <a href="/tags/PowerShell/" style="font-size: 10px;">PowerShell</a> <a href="/tags/Query-by-specification/" style="font-size: 13.33px;">Query-by-specification</a> <a href="/tags/S3/" style="font-size: 10px;">S3</a> <a href="/tags/SASS/" style="font-size: 10px;">SASS</a> <a href="/tags/SOLID/" style="font-size: 13.33px;">SOLID</a> <a href="/tags/SpecFlow/" style="font-size: 13.33px;">SpecFlow</a> <a href="/tags/Sublime-Text/" style="font-size: 10px;">Sublime Text</a> <a href="/tags/TF-Build/" style="font-size: 10px;">TF Build</a> <a href="/tags/TFS/" style="font-size: 13.33px;">TFS</a> <a href="/tags/Testing/" style="font-size: 13.33px;">Testing</a> <a href="/tags/Topshelf/" style="font-size: 10px;">Topshelf</a> <a href="/tags/WordPress/" style="font-size: 10px;">WordPress</a> <a href="/tags/automation/" style="font-size: 10px;">automation</a> <a href="/tags/bootstrap/" style="font-size: 10px;">bootstrap</a> <a href="/tags/design-patterns/" style="font-size: 13.33px;">design patterns</a> <a href="/tags/dev/" style="font-size: 20px;">dev</a> <a href="/tags/git/" style="font-size: 13.33px;">git</a> <a href="/tags/git-tf/" style="font-size: 10px;">git-tf</a> <a href="/tags/gulp/" style="font-size: 10px;">gulp</a> <a href="/tags/log4net/" style="font-size: 10px;">log4net</a> <a href="/tags/staticgen/" style="font-size: 10px;">staticgen</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/windows-services/" style="font-size: 10px;">windows-services</a> <a href="/tags/yeoman/" style="font-size: 13.33px;">yeoman</a>
     </p>
   </div>
 
@@ -1052,7 +1044,7 @@ public void WhenWePressTheButton()
   
   <div class="sidebar-module">
     <h4>Archives</h4>
-    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/02/">February 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
+    <ul class="sidebar-module-list"><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/06/">June 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/05/">May 2016</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/04/">April 2016</a><span class="sidebar-module-list-count">5</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/03/">March 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2016/02/">February 2016</a><span class="sidebar-module-list-count">1</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/08/">August 2015</a><span class="sidebar-module-list-count">2</span></li><li class="sidebar-module-list-item"><a class="sidebar-module-list-link" href="/archives/2015/07/">July 2015</a><span class="sidebar-module-list-count">2</span></li></ul>
   </div>
 
 
@@ -1061,6 +1053,10 @@ public void WhenWePressTheButton()
   <div class="sidebar-module">
     <h4>Recents</h4>
     <ul class="sidebar-module-list">
+      
+        <li>
+          <a href="/2016/06/streamlining-bootstrap/">Streamlining Bootstrap</a>
+        </li>
       
         <li>
           <a href="/2016/05/expression-tree-equality-in-dotnet/">Expression tree equality in .NET</a>
@@ -1076,10 +1072,6 @@ public void WhenWePressTheButton()
       
         <li>
           <a href="/2016/04/git-submodules-detached-HEAD/">git submodules detached HEAD</a>
-        </li>
-      
-        <li>
-          <a href="/2016/04/5-minute-hw-dotnet-on-ubuntu/">5 minute hw dotnet app on ubuntu</a>
         </li>
       
     </ul>

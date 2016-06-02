@@ -3,17 +3,22 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: ubuntu | RTBLOGG</title>
+  <title>Streamlining Bootstrap | RTBLOGG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="cool">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RTBLOGG">
-<meta property="og:url" content="http://www.blog.ryanbartsch.com/tags/ubuntu/index.html">
+  <meta name="description" content="At my current workplace we need to smash out responsive pages at a pretty fast rate. As far as building the responsiveness, we’ve decided to specialise a bit whereby we have a guy working with the mar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Streamlining Bootstrap">
+<meta property="og:url" content="http://www.blog.ryanbartsch.com/2016/06/streamlining-bootstrap/index.html">
 <meta property="og:site_name" content="RTBLOGG">
-<meta property="og:description" content="cool">
+<meta property="og:description" content="At my current workplace we need to smash out responsive pages at a pretty fast rate. As far as building the responsiveness, we’ve decided to specialise a bit whereby we have a guy working with the mar">
+<meta property="og:image" content="http://www.blog.ryanbartsch.com/images/yeoman.png">
+<meta property="og:image" content="http://www.blog.ryanbartsch.com/images/yops1.png">
+<meta property="og:image" content="http://www.blog.ryanbartsch.com/images/yops2.png">
+<meta property="og:updated_time" content="2016-06-02T12:43:34.184Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RTBLOGG">
-<meta name="twitter:description" content="cool">
+<meta name="twitter:title" content="Streamlining Bootstrap">
+<meta name="twitter:description" content="At my current workplace we need to smash out responsive pages at a pretty fast rate. As far as building the responsiveness, we’ve decided to specialise a bit whereby we have a guy working with the mar">
+<meta name="twitter:image" content="http://www.blog.ryanbartsch.com/images/yeoman.png">
   
     <link rel="alternate" href="/atom.xml" title="RTBLOGG" type="application/atom+xml">
   
@@ -28,6 +33,24 @@
 
   <link rel="stylesheet" href="/css/styles.css">
   
+
+  
+  
+<!-- PushCrew -->
+<script type="text/javascript">
+(function(p,u,s,h){
+    p._pcq=p._pcq||[];
+    p._pcq.push(['_currentTime',Date.now()]);
+    s=u.createElement('script');
+    s.type='text/javascript';
+    s.async=true;
+    s.src='https://cdn.pushcrew.com/js/'+'b5b914820b36c9d0db20ce4fc6480ad2'+'.js';
+    h=u.getElementsByTagName('script')[0];
+    h.parentNode.insertBefore(s,h);
+})(window,document);
+</script>
+<!-- End PushCrew -->
+
 
   
 </head>
@@ -83,40 +106,129 @@
 </div>
     <div class="row">
         <div class="col-sm-8 blog-main">
-          
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <header class="archive-article-header">
+          <article id="post-streamlining-bootstrap" class="article article-type-post" itemscope itemprop="blogPost">
+
+  <header class="article-header">
     
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/04/5-minute-hw-dotnet-on-ubuntu/">5 minute hw dotnet app on ubuntu</a>
+    <h1 class="article-title" itemprop="name">
+      Streamlining Bootstrap
     </h1>
   
 
 
+  </header>
+
+  <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2016/04/5-minute-hw-dotnet-on-ubuntu/" class="archive-article-date"><time datetime="2016-04-19T13:01:01.000Z" itemprop="datePublished">April 19th</time></a>
+  <a href="/2016/06/streamlining-bootstrap/" class="article-date"><time datetime="2016-06-01T14:11:23.000Z" itemprop="datePublished">2016-06-01</time></a>
 </div>
 
-  </header>
-</article>
+    
+    
+
+  </div>
+  <div class="article-inner">
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>At my current workplace we need to smash out responsive pages at a pretty fast rate. As far as building the responsiveness, we’ve decided to specialise a bit whereby we have a guy working with the marketing team to build the responsive pages. These are subsequently given to the DEVs for data binding and wiring up to the back-end. The current approach <em>was</em> to build everything in <a href="https://www.visualstudio.com/" target="_blank" rel="external">Visual Studio</a>, but this seemed like overkill. Don’t get me wrong; I love Visual Studio and have been using it since VS 2005, however it’s a pretty heavy IDE for the task at hand.</p>
+<p>I played around with a few bootstrap editors like <a href="https://jetstrap.com/" target="_blank" rel="external">jetstrap</a> and <a href="http://pingendo.com/" target="_blank" rel="external">pingendo</a>, but we require a pretty high level of customisation and to tell you the truth the quality of the generated markup from these tools was far from perfect. So back to ol’ faithful <a href="https://www.sublimetext.com/" target="_blank" rel="external">Sublime Text</a>.</p>
+<p>I’ve been playing around with <a href="http://gulpjs.com/" target="_blank" rel="external">gulp</a> a lot lately - on a side note gulp &gt; grunt, but I digress… I started playing around with gulp to build an awesome workflow for smashing out responsive HTML using <a href="http://getbootstrap.com/" target="_blank" rel="external">bootstrap</a> and <a href="http://sass-lang.com/" target="_blank" rel="external">SASS</a>. Some of the Gulp plugins that I used include:</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/gulp-inject" target="_blank" rel="external">gulp-inject</a> for injecting custom stylesheets and JavaScript into HTML pages.</li>
+<li><a href="https://www.npmjs.com/package/wiredep" target="_blank" rel="external">wiredep</a> for wiring up bower dependencies into HTML pages.</li>
+<li><a href="https://www.npmjs.com/package/gulp-sass" target="_blank" rel="external">gulp-sass</a> for automating the compilation of SASS into CSS.</li>
+<li><a href="https://www.npmjs.com/package/gulp-autoprefixer" target="_blank" rel="external">gulp-autoprefixer</a> for injecting vendor prefixes into CSS.</li>
+<li><a href="http://nodemon.io/" target="_blank" rel="external">nodemon</a> for monitoring changes in source code and automatically restarting <a href="http://expressjs.com/" target="_blank" rel="external">express</a>.</li>
+<li><a href="https://www.browsersync.io/" target="_blank" rel="external">browser-sync</a> for keeping multiple browsers &amp; devices in sync when building websites.</li>
+</ul>
+<p>All this was pretty cool stuff, especially when used in combination with Sublime plugins like <a href="https://packagecontrol.io/packages/Emmet" target="_blank" rel="external">Emmet</a>, and bootstrap <a href="https://packagecontrol.io/packages/Bootstrap%203%20Snippets" target="_blank" rel="external">3</a>|<a href="https://packagecontrol.io/packages/Bootstrap%204%20Snippets" target="_blank" rel="external">4</a> snippets. But what is <em>really</em> cool was bringing the old mate <a href="http://yeoman.io/" target="_blank" rel="external">yeoman</a> along to the party.</p>
+<p><img src="/images/yeoman.png" alt=""></p>
+<p>I’d used yeoman generators before, so I had the idea of writing my own generator for scaffolding out my streamlined bootstrap workflow. Unfortunately there’s a few pre-requisites to all of this, so I’ll give you a quick rundown (in Windows PowerShell). Note: I installed all this stuff over a number of years, so hopefully I didn’t miss anything…</p>
+<pre><code># install chocolatey
+Set-ExecutionPolicy RemoteSigned
+iwr https://chocolatey.org/install.ps1 | iex
+# install a few chocolatey packages
+cinst git -y
+cinst poshgit -y
+cinst nodejs -y
+# install a few global npm packages
+npm i -g bower
+npm i -g gulp
+npm i -g yo
+# clone my yeoman generator
+git clone https://github.com/yesmarket/generator-bootstrap
+cd generator-bootstrap
+npm link
+# navigate to a location for builsing your streamlined bootstrap pages
+cd [path-to-streamlined-bootstrap-dir]
+# put the yeoman to work
+yo bootstrap
+# install all the bower dependencies
+bower install
+# open everything in sublime text
+subl .
+# create a new HTML page
+yo bootstrap:newpage
+# and finally run the gulp task runner to do all the things
+gulp start
+# profit :P
+</code></pre><p>When you run the yo bootstrap command you’ll have to answer a few questions, which influence how everything is generated:</p>
+<p><img src="/images/yops1.png" alt=""></p>
+<p>Similarly, when you run the yeoman sub-generator yo bootstrap:newpage you’ll have to tell the yeoman the name of your page, which will be generated from a template.</p>
+<p><img src="/images/yops2.png" alt=""></p>
+<p>My yeoman generator is on <a href="https://github.com/yesmarket/generator-bootstrap" target="_blank" rel="external">GitHub</a> and free to use. Enjoy.</p>
+
+      
+    </div>
+
+    
+      
+
+    
+
+    <footer class="article-footer">
+      <a data-url="http://www.blog.ryanbartsch.com/2016/06/streamlining-bootstrap/" data-id="cioy9vkc80008egcilyupauee" class="article-share-link">
+        <i class="fa fa-share"></i> Share
+      </a>
+      
+        <a href="http://www.blog.ryanbartsch.com/2016/06/streamlining-bootstrap/#disqus_thread" class="article-comment-link">
+          <i class="fa fa-comment"></i> Comments
+        </a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Emmet/">Emmet</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SASS/">SASS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Sublime-Text/">Sublime Text</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bootstrap/">bootstrap</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gulp/">gulp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yeoman/">yeoman</a></li></ul>
+
+
+    </footer>
+  </div>
 
   
+  <section id="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
   
-    </div></section>
   
+  
+    
+<ul id="article-nav" class="nav nav-pills nav-justified">
+  
+  <li role="presentation">
+    <a href="/2016/05/expression-tree-equality-in-dotnet/" id="article-nav-older" class="article-nav-link-wrap">
+      <i class="fa fa-chevron-left pull-left"></i>
+      <span class="article-nav-link-title">Expression tree equality in .NET</span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+
+  
+</article>
 
 
 
@@ -205,11 +317,13 @@
 <script>
   var disqus_shortname = 'rtblogg';
   
+  var disqus_url = 'http://www.blog.ryanbartsch.com/2016/06/streamlining-bootstrap/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>
